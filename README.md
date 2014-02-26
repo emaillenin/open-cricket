@@ -1,4 +1,4 @@
-open-cricket
+Open Cricket
 ============
 
-Cricket API
+Open access to cricket stats.
