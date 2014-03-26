@@ -17,7 +17,7 @@ Open Cricket aims to provide free access to all cricket statistics via API. By s
 How it works?
 =============
 
-You can ask questions like *When was the last time India chased down 300+ successfully?* or *Which team has the most number of the consecutive wins this year?*.
+You can ask questions like *When was the last time India chased down 300+ successfully?*, *Which team has the most number of the consecutive wins this year?* or *Yuvraj's performance in world cup finals?*
 
 Why?
 ====
