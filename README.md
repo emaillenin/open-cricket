@@ -22,4 +22,5 @@ You can ask questions like *When was the last time India chased down 300+ succes
 Why?
 ====
 
-With huge amount of stats being generated every day, it is becoming really difficult to unearth the awesome facts that you wanted to know. 
+With huge amount of stats being generated every day, it is becoming really difficult to unearth the awesome facts that you wanted to know.
+And Wolfram Alpha does not support Cricket subject!
