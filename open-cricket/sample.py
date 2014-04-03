@@ -17,4 +17,5 @@ for line in open('./config/sentences.txt', 'r'):
     print(pos[0])
     cp = nltk.RegexpParser(grammar)
     result = cp.parse(pos[0])
-    print result
+    # print result
+    print nltk.ne_chunk(pos[0])
