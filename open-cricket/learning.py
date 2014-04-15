@@ -4,9 +4,9 @@ import json
 import sys
 import nltk
 
-# input = "What are the matches played between India and Australia in world cup?"
+input = 'The matches played between India and SriLanka in world cup'
 # input = 'What is Suresh Raina\'s scores this year?'
-input = sys.stdin.readlines().__str__()
+# input = sys.stdin.readlines().__str__()
 tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
 chunks = nltk.ne_chunk(pos)
