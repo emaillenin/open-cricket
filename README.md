@@ -22,6 +22,7 @@ Apart from raw stats, you can also ask questions like
  - Yuvraj's performance in world cup finals?
  - When did Shoaib Akhtar took Sachin's wicket with a golden duck?
  - How many times Brett Lee has dismissed batsmen on their 90s?
+ - How many times Gilchrist has hit fours in the first ball of the over?
  - etc.,
 
 How it works?
