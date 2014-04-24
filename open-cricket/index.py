@@ -70,7 +70,7 @@ if len(sys.argv) > 1:
 else:
     #  TODO Please do Unit test for each type of input. Unit test should check the final json output.
     # input = 'matches India and Pakistan'
-    input = 'highest scores for India'  # 2
+    input = 'matches between India and Pakistan'  # 2
 
 logging.info("Input search: %s", input)
 
@@ -78,14 +78,14 @@ tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
 
 NNP = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'NNP']) + '"'
+cfg_helpers = {'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'"}
+cfg_parsers = []
 
-if False:
-    grammar = nltk.parse_cfg("""
-     S -> team
-     team -> %s
-     """ % NNP)
-
-matches = nltk.parse_cfg("""
+if NNP == '""':
+    logging.warn("No Proper nouns found in %s", input)
+else:
+    cfg_parsers.append(
+        nltk.parse_cfg("""
  matches -> select clause
  matches -> select IN clause
  clause -> team1 CC team2
@@ -95,26 +95,32 @@ matches = nltk.parse_cfg("""
  team -> %s
  CC -> 'and' | '&' | 'vs'
  IN -> 'between' | 'of'
- """ % NNP)
-
-scores = nltk.parse_cfg("""
+ """ % NNP))
+    cfg_parsers.append(nltk.parse_cfg("""
  scores -> question filler extent filler team
  scores -> extent filler team
  scores -> extent class filler team
  team -> %s
  question -> 'what'
- extent -> 'highest' | 'lowest' | 'high' | 'low'
+ %s
  class -> 'ODI' | 'test'
  filler -> filler filler
  filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of'
  IN -> 'between' | 'of'
- """ % NNP)
+ """ % (NNP, cfg_helpers['extent'])))
+
+cfg_parsers.append(
+    nltk.parse_cfg("""
+    partnerships -> extent select
+    partnerships -> select extent
+    select -> 'partnership'
+    %s
+""" % cfg_helpers['extent']))
 
 # @doc - Recursive grammer (filler -> filler filler) will not be captured in dictionary since they have the same key. This is okay since we dont use this info for Search
 
-parse_input(matches)
-
-parse_input(scores)
+for cfg in cfg_parsers:
+    parse_input(cfg)
 
 logging.error("Unable to find result for : %s", input)
 exit(2)
