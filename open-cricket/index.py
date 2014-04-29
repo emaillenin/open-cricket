@@ -1,3 +1,4 @@
+from string import lower
 import nltk
 import sys
 import logging
@@ -10,12 +11,11 @@ logging.basicConfig(filename=os.path.dirname(os.path.abspath(__file__)) + '/logs
 
 
 def parse_input(grammar):
-    result = []
     try:
         result = nltk.ChartParser(grammar).nbest_parse(input.split())
+        send_result(result)
     except ValueError:
         pass
-    send_result(result)
 
 
 def str_wrap(str):
@@ -70,7 +70,8 @@ if len(sys.argv) > 1:
 else:
     #  TODO Please do Unit test for each type of input. Unit test should check the final json output.
     # input = 'matches India and Pakistan'
-    input = 'matches between India and Pakistan'  # 2
+    # input = 'matches between India and Pakistan'  # 2
+    input = 'highest partnerships for 1st wicket for south africa'
 
 logging.info("Input search: %s", input)
 
@@ -78,7 +79,24 @@ tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
 
 NNP = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'NNP']) + '"'
-cfg_helpers = {'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'"}
+
+input = lower(input)  # Converting the input to lower case so we can specify only lower case words in config
+
+team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
+
+cfg_helpers = {
+    'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
+    'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
+    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of'",
+    'team': """
+            team -> team1 team2 team3
+            team -> team1 team2
+            team -> team1
+            team1 -> """ + team_list + """
+            team2 -> """ + team_list + """
+            team3 -> """ + team_list + """
+            """,
+}
 cfg_parsers = []
 
 if NNP == '""':
@@ -113,9 +131,17 @@ cfg_parsers.append(
     nltk.parse_cfg("""
     partnerships -> extent select
     partnerships -> select extent
-    select -> 'partnership'
+    partnerships -> extent select filler wkt_order wicket
+    partnerships -> extent select filler wkt_order wicket filler team
+    partnerships -> extent select filler team
+    partnerships -> extent select filler team filler wkt_order wicket
+    select -> 'partnership' |  'partnerships'
     %s
-""" % cfg_helpers['extent']))
+    %s
+    %s
+    %s
+    wicket -> 'wicket'
+""" % (cfg_helpers['extent'], cfg_helpers['filler'], cfg_helpers['wkt_order'], cfg_helpers['team'])))
 
 # @doc - Recursive grammer (filler -> filler filler) will not be captured in dictionary since they have the same key. This is okay since we dont use this info for Search
 
