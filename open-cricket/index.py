@@ -69,9 +69,10 @@ if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
     #  TODO Please do Unit test for each type of input. Unit test should check the final json output.
-    # input = 'matches India and Pakistan'
+    # input = 'matches between india and pakistan'
+    input = 'highest scores of royal challengers bangalore'
     # input = 'matches between India and Pakistan'  # 2
-    input = 'highest partnerships for 1st wicket for south africa'
+    # input = 'highest partnerships for 1st wicket for south africa'
 
 logging.info("Input search: %s", input)
 
@@ -99,33 +100,30 @@ cfg_helpers = {
 }
 cfg_parsers = []
 
-if NNP == '""':
-    logging.warn("No Proper nouns found in %s", input)
-else:
-    cfg_parsers.append(
-        nltk.parse_cfg("""
+cfg_parsers.append(
+    nltk.parse_cfg("""
  matches -> select clause
  matches -> select IN clause
- clause -> team1 CC team2
+ clause -> teamA CC teamB
  select -> 'matches' | 'match' | 'games' | 'game'
- team1 -> team
- team2 -> team
- team -> %s
+ teamA -> team
+ teamB -> team
+ %s
  CC -> 'and' | '&' | 'vs'
  IN -> 'between' | 'of'
- """ % NNP))
-    cfg_parsers.append(nltk.parse_cfg("""
+ """ % cfg_helpers['team']))
+cfg_parsers.append(nltk.parse_cfg("""
  scores -> question filler extent filler team
  scores -> extent filler team
  scores -> extent class filler team
- team -> %s
+ %s
  question -> 'what'
  %s
  class -> 'ODI' | 'test'
  filler -> filler filler
  filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of'
  IN -> 'between' | 'of'
- """ % (NNP, cfg_helpers['extent'])))
+ """ % (cfg_helpers['team'], cfg_helpers['extent'])))
 
 cfg_parsers.append(
     nltk.parse_cfg("""
