@@ -14,6 +14,7 @@ def enrich_full_name(players):
     for i, s in enumerate(players):
         for p in players:
             if len(p) > len(s) and s in p:  # Different string
+                # TODO In this step, make a learning that s refers to p. Machine learning ;)
                 players[i] = p
                 break
     return players
@@ -68,6 +69,7 @@ def main():
                                 fpeople.append(' '.join([e[0] for e in p]))
                 with open(os.path.join(impressions_input_dir, os.path.basename(f)), 'w') as fwrite:
                     fwrite.write(json.dumps((collections.Counter(enrich_full_name(fpeople)))))
+                print('Completed processing ' + f)
                 archive_file(root, os.path.basename(f), config['archive_dir'])
     else:
         print('No input files found. Exiting...')

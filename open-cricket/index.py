@@ -70,9 +70,10 @@ if len(sys.argv) > 1:
 else:
     #  TODO Please do Unit test for each type of input. Unit test should check the final json output.
     # input = 'matches between india and pakistan'
-    input = 'highest scores of royal challengers bangalore'
+    # input = 'highest scores of royal challengers bangalore'
     # input = 'matches between India and Pakistan'  # 2
     # input = 'highest partnerships for 1st wicket for south africa'
+    input = 'when was the last time india chased down 300+ successfully?'
 
 logging.info("Input search: %s", input)
 
@@ -80,8 +81,12 @@ tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
 
 NNP = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'NNP']) + '"'
+CD = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'CD']) + '"'
+
+# Pre-process Input:
 
 input = lower(input)  # Converting the input to lower case so we can specify only lower case words in config
+input = input.translate(None, '?')  # Strip question marks
 
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
 
@@ -97,6 +102,21 @@ cfg_helpers = {
             team2 -> """ + team_list + """
             team3 -> """ + team_list + """
             """,
+    'last_time': """
+        last_time -> when was the last time
+        when -> 'when'
+        was -> 'was'
+        the -> 'the'
+        last -> 'last'
+        time -> 'time'
+        """,
+    'how_many_times': """
+        how_many_times -> how many times
+        how -> 'how'
+        many -> 'many'
+        times -> 'times'
+        """
+
 }
 cfg_parsers = []
 
@@ -112,6 +132,7 @@ cfg_parsers.append(
  CC -> 'and' | '&' | 'vs'
  IN -> 'between' | 'of'
  """ % cfg_helpers['team']))
+
 cfg_parsers.append(nltk.parse_cfg("""
  scores -> question filler extent filler team
  scores -> extent filler team
@@ -141,6 +162,23 @@ cfg_parsers.append(
     wicket -> 'wicket'
 """ % (cfg_helpers['extent'], cfg_helpers['filler'], cfg_helpers['wkt_order'], cfg_helpers['team'])))
 
+cfg_parsers.append(
+    nltk.parse_cfg("""
+        matches_cond -> what team chased_s score
+        matches_cond -> what team chased_s score filler
+        what -> last_time
+        what -> how_many_times
+        %s
+        %s
+        %s
+        chased_s -> chased
+        chased_s -> chased down
+        chased -> 'chased'
+        down -> 'down'
+        score -> %s
+        filler -> 'successfully'
+    """ % (cfg_helpers['last_time'], cfg_helpers['how_many_times'], cfg_helpers['team'], CD))
+)
 # @doc - Recursive grammer (filler -> filler filler) will not be captured in dictionary since they have the same key. This is okay since we dont use this info for Search
 
 for cfg in cfg_parsers:
