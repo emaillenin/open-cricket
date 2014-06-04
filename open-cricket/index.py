@@ -15,12 +15,21 @@ def parse_input(grammar):
         result = nltk.ChartParser(grammar).nbest_parse(input.split())
         send_result(result)
     except ValueError:
-        pass
+        try:
+            result = nltk.ChartParser(grammar).nbest_parse(original_input.split())
+            send_result(result)
+        except ValueError:
+            pass
 
 
 def str_wrap(str):
     return '"' + str + '"'
 
+def empty_pos(pos,tag):
+    return len([p[0] for p in pos if p[1] == tag]) == 0
+
+def words_from_pos(pos,tag):
+    return '"' + '" | "'.join([p[0] for p in pos if p[1] == tag]) + '"'
 
 def tree_to_list(tree):  # convert tree to list
     result = ''
@@ -73,18 +82,30 @@ else:
     # input = 'highest scores of royal challengers bangalore'
     # input = 'matches between India and Pakistan'  # 2
     # input = 'highest partnerships for 1st wicket for south africa'
-    input = 'when was the last time india chased down 300+ successfully?'
+    # input = 'when was the last time india chased down 300+ successfully?'
+    input = 'Dale Steyn stats'
 
 logging.info("Input search: %s", input)
 
 tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
 
-NNP = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'NNP']) + '"'
-CD = '"' + '" | "'.join([p[0] for p in pos if p[1] == 'CD']) + '"'
+# Defaults
+
+
+NNP = '"Name"'
+CD = '"0"'
+
+if not empty_pos(pos, 'NNP'):
+    NNP = words_from_pos(pos, 'NNP')
+if not empty_pos(pos, 'CD'):
+    CD = words_from_pos(pos, 'CD')
 
 # Pre-process Input:
 
+# TODO Consider all Title cased words (eg., ) as NNP, since NLTK cannot detect all player names accurately
+
+original_input = input
 input = lower(input)  # Converting the input to lower case so we can specify only lower case words in config
 input = input.translate(None, '?')  # Strip question marks
 
@@ -173,12 +194,27 @@ cfg_parsers.append(
         %s
         chased_s -> chased
         chased_s -> chased down
-        chased -> 'chased'
+        chased -> 'chased' | 'chase'
         down -> 'down'
         score -> %s
         filler -> 'successfully'
     """ % (cfg_helpers['last_time'], cfg_helpers['how_many_times'], cfg_helpers['team'], CD))
 )
+
+cfg_parsers.append(
+    nltk.parse_cfg("""
+    player_stats -> player stats
+    player -> player1 player2 player3
+    player -> player1 player2
+    player -> player1
+    player1 -> %s
+    player2 -> %s
+    player3 -> %s
+    stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
+    """ % (NNP, NNP, NNP))
+)
+
+
 # @doc - Recursive grammer (filler -> filler filler) will not be captured in dictionary since they have the same key. This is okay since we dont use this info for Search
 
 for cfg in cfg_parsers:
