@@ -83,7 +83,8 @@ else:
     # input = 'matches between India and Pakistan'  # 2
     # input = 'highest partnerships for 1st wicket for south africa'
     # input = 'when was the last time india chased down 300+ successfully?'
-    input = 'Dale Steyn stats'
+    # input = 'Dale Steyn stats'
+    input = 'dismissals by bowled in india'
 
 logging.info("Input search: %s", input)
 
@@ -114,7 +115,8 @@ team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bang
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
     'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
-    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of'",
+    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'",
+    'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
     'team': """
             team -> team1 team2 team3
             team -> team1 team2
@@ -214,8 +216,21 @@ cfg_parsers.append(
     """ % (NNP, NNP, NNP))
 )
 
+cfg_parsers.append(
+    nltk.parse_cfg("""
+    player_dismissals -> what filler dismissals filler team
+    player_dismissals -> what filler dismissals
+    what -> 'dismissals'
+    %s
+    %s
+    %s
+""" % (cfg_helpers['filler'], cfg_helpers['team'], cfg_helpers['dismissals']))
+)
 
-# @doc - Recursive grammer (filler -> filler filler) will not be captured in dictionary since they have the same key. This is okay since we dont use this info for Search
+
+# @doc - Recursive grammer
+# (filler -> filler filler) will not be captured in dictionary since they have the same key.
+# This is okay since we dont use this info for Search
 
 for cfg in cfg_parsers:
     parse_input(cfg)
