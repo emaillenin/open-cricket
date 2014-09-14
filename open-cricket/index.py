@@ -77,14 +77,7 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    #  TODO Please do Unit test for each type of input. Unit test should check the final json output.
-    # input = 'matches between india and pakistan'
-    # input = 'highest scores of royal challengers bangalore'
-    # input = 'matches between India and Pakistan'  # 2
-    # input = 'highest partnerships for 1st wicket for south africa'
-    # input = 'when was the last time india chased down 300+ successfully?'
-    # input = 'Dale Steyn stats'
-    input = 'dismissals by bowled in india'
+    input = 'Sachin Tendulkar stats in 2009'
 
 logging.info("Input search: %s", input)
 
@@ -111,6 +104,7 @@ input = lower(input)  # Converting the input to lower case so we can specify onl
 input = input.translate(None, '?')  # Strip question marks
 
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
+series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
 
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
@@ -124,6 +118,14 @@ cfg_helpers = {
             team1 -> """ + team_list + """
             team2 -> """ + team_list + """
             team3 -> """ + team_list + """
+            """,
+    'series': """
+            series -> series1 series2 series3
+            series -> series1 series2
+            series -> series1
+            series1 -> """ + series_list + """
+            series2 -> """ + series_list + """
+            series3 -> """ + series_list + """
             """,
     'last_time': """
         last_time -> when was the last time
@@ -165,7 +167,7 @@ cfg_parsers.append(nltk.parse_cfg("""
  %s
  class -> 'ODI' | 'test'
  filler -> filler filler
- filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of'
+ filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'
  IN -> 'between' | 'of'
  """ % (cfg_helpers['team'], cfg_helpers['extent'])))
 
@@ -206,14 +208,20 @@ cfg_parsers.append(
 cfg_parsers.append(
     nltk.parse_cfg("""
     player_stats -> player stats
+    player_stats -> player stats filler series
+    player_stats -> player stats filler year
+    player_stats -> player stats filler series year
     player -> player1 player2 player3
     player -> player1 player2
     player -> player1
     player1 -> %s
     player2 -> %s
     player3 -> %s
+    %s
+    %s
+    year -> %s
     stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-    """ % (NNP, NNP, NNP))
+    """ % (NNP, NNP, NNP, cfg_helpers['series'],cfg_helpers['filler'], CD))
 )
 
 cfg_parsers.append(
