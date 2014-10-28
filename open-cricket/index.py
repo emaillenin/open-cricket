@@ -1,4 +1,3 @@
-from string import lower
 import nltk
 import sys
 import logging
@@ -12,11 +11,11 @@ logging.basicConfig(filename=os.path.dirname(os.path.abspath(__file__)) + '/logs
 
 def parse_input(grammar):
     try:
-        result = nltk.ChartParser(grammar).nbest_parse(input.split())
+        result = nltk.ChartParser(grammar).parse(input.split())
         send_result(result)
     except ValueError:
         try:
-            result = nltk.ChartParser(grammar).nbest_parse(original_input.split())
+            result = nltk.ChartParser(grammar).parse(original_input.split())
             send_result(result)
         except ValueError:
             pass
@@ -34,9 +33,9 @@ def words_from_pos(pos,tag):
 def tree_to_list(tree):  # convert tree to list
     result = ''
     if isinstance(tree, nltk.Tree) and isinstance(tree[0], nltk.Tree):
-        result += str_wrap(tree.node) + ' : ' + ",".join([tree_to_list(t) for t in tree]) + "  }"
+        result += str_wrap(tree.label()) + ' : ' + ",".join([tree_to_list(t) for t in tree]) + "  }"
     elif isinstance(tree, nltk.Tree):
-        result += str_wrap(tree.node) + ' : ' + str_wrap(tree[0])
+        result += str_wrap(tree.label()) + ' : ' + str_wrap(tree[0])
     else:
         result += str_wrap(tree) + ",  "
     return result
@@ -46,9 +45,9 @@ def tree_to_dict(tree):
     tdict = {}
     for t in tree:
         if isinstance(t, nltk.Tree) and isinstance(t[0], nltk.Tree):
-            tdict[t.node] = tree_to_dict(t)
+            tdict[t.label()] = tree_to_dict(t)
         elif isinstance(t, nltk.Tree):
-            tdict[t.node] = t[0]
+            tdict[t.label()] = t[0]
     return tdict
 
 
@@ -58,16 +57,17 @@ def dict_to_json(dict):
 
 def analyze_tree(tree):
     for t in tree:
-        print(t.node)
+        print(t.label())
         print(len(t))
         print(t[0].__class__)
         if t[0].__class__.__name__ == 'Tree': analyze_tree(t[0])
 
 
 def send_result(result):
-    if len(result) > 0:
+    result_list = list(result)
+    if len(result_list) > 0:
         # json = tree_to_list(result[0])
-        json = dict_to_json({result[0].node: tree_to_dict(result[0])})
+        json = dict_to_json({result_list[0].label(): tree_to_dict(result_list[0])})
         # result[0].draw()
         logging.info("Search Result " + json)
         print(json)
@@ -100,8 +100,8 @@ if not empty_pos(pos, 'CD'):
 # TODO Consider all Title cased words (eg., ) as NNP, since NLTK cannot detect all player names accurately
 
 original_input = input
-input = lower(input)  # Converting the input to lower case so we can specify only lower case words in config
-input = input.translate(None, '?')  # Strip question marks
+# input = input.lower()  # Converting the input to lower case so we can specify only lower case words in config
+input = input.replace('?','')  # Strip question marks
 
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
 series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
@@ -146,7 +146,7 @@ cfg_helpers = {
 cfg_parsers = []
 
 cfg_parsers.append(
-    nltk.parse_cfg("""
+    nltk.CFG.fromstring("""
  matches -> select clause
  matches -> select IN clause
  clause -> teamA CC teamB
@@ -158,7 +158,7 @@ cfg_parsers.append(
  IN -> 'between' | 'of'
  """ % cfg_helpers['team']))
 
-cfg_parsers.append(nltk.parse_cfg("""
+cfg_parsers.append(nltk.CFG.fromstring("""
  scores -> question filler extent filler team
  scores -> extent filler team
  scores -> extent class filler team
@@ -172,7 +172,7 @@ cfg_parsers.append(nltk.parse_cfg("""
  """ % (cfg_helpers['team'], cfg_helpers['extent'])))
 
 cfg_parsers.append(
-    nltk.parse_cfg("""
+    nltk.CFG.fromstring("""
     partnerships -> extent select
     partnerships -> select extent
     partnerships -> extent select filler wkt_order wicket
@@ -188,7 +188,7 @@ cfg_parsers.append(
 """ % (cfg_helpers['extent'], cfg_helpers['filler'], cfg_helpers['wkt_order'], cfg_helpers['team'])))
 
 cfg_parsers.append(
-    nltk.parse_cfg("""
+    nltk.CFG.fromstring("""
         matches_cond -> what team chased_s score
         matches_cond -> what team chased_s score filler
         what -> last_time
@@ -206,7 +206,7 @@ cfg_parsers.append(
 )
 
 cfg_parsers.append(
-    nltk.parse_cfg("""
+    nltk.CFG.fromstring("""
     player_stats -> player stats
     player_stats -> player stats filler series
     player_stats -> player stats filler year
@@ -225,7 +225,7 @@ cfg_parsers.append(
 )
 
 cfg_parsers.append(
-    nltk.parse_cfg("""
+    nltk.CFG.fromstring("""
     player_dismissals -> what filler dismissals filler team
     player_dismissals -> what filler dismissals
     what -> 'dismissals'
