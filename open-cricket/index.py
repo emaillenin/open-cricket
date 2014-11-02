@@ -77,7 +77,7 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'Sachin Tendulkar stats in 2009'
+    input = 'Kumar Sangakkara stats in 2011'
 
 logging.info("Input search: %s", input)
 
@@ -108,6 +108,7 @@ series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' |
 
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
+    'this_last': "this_last -> 'this' | 'last'",
     'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
     'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'",
     'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
@@ -209,6 +210,7 @@ cfg_parsers.append(
     nltk.CFG.fromstring("""
     player_stats -> player stats
     player_stats -> player stats filler series
+    player_stats -> player stats this_last year
     player_stats -> player stats filler year
     player_stats -> player stats filler series year
     player -> player1 player2 player3
@@ -219,9 +221,11 @@ cfg_parsers.append(
     player3 -> %s
     %s
     %s
+    %s
     year -> %s
+    year -> 'year'
     stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-    """ % (NNP, NNP, NNP, cfg_helpers['series'],cfg_helpers['filler'], CD))
+    """ % (NNP, NNP, NNP, cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD))
 )
 
 cfg_parsers.append(
