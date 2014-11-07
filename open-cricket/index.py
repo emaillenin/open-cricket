@@ -3,6 +3,7 @@ import sys
 import logging
 import os
 import json
+import re
 
 logging.basicConfig(filename=os.path.dirname(os.path.abspath(__file__)) + '/logs/application.log',
                     format='%(levelname)s %(asctime)s %(message)s',
@@ -24,11 +25,22 @@ def parse_input(grammar):
 def str_wrap(str):
     return '"' + str + '"'
 
-def empty_pos(pos,tag):
+
+def empty_pos(pos, tag):
     return len([p[0] for p in pos if p[1] == tag]) == 0
 
-def words_from_pos(pos,tag):
+
+def extract_words_with_tag(pos, tag):
+    return [p[0] for p in pos if p[1] == tag]
+
+
+def words_from_pos(pos, tag):
     return '"' + '" | "'.join([p[0] for p in pos if p[1] == tag]) + '"'
+
+
+def join_for_config(words):
+    return ' "' + '" | "'.join(words) + '" '
+
 
 def tree_to_list(tree):  # convert tree to list
     result = ''
@@ -77,9 +89,13 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'Kumar Sangakkara stats in 2011'
+    input = 'Suresh Raina recent scores'
 
 logging.info("Input search: %s", input)
+
+title_case_pattern = re.compile('^[A-Z].*')
+
+title_case_words = [word for word in input.split(' ') if title_case_pattern.match(word)]
 
 tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
@@ -87,13 +103,13 @@ pos = nltk.pos_tag(tokens)
 # Defaults
 
 
-NNP = '"Name"'
+NNP = join_for_config(title_case_words)
 CD = '"0"'
 
 if not empty_pos(pos, 'NNP'):
-    NNP = words_from_pos(pos, 'NNP')
+    NNP = join_for_config(list(set(title_case_words + extract_words_with_tag(pos, 'NNP'))))
 if not empty_pos(pos, 'CD'):
-    CD = words_from_pos(pos, 'CD')
+    CD = join_for_config(extract_words_with_tag(pos, 'CD'))
 
 # Pre-process Input:
 
@@ -101,7 +117,7 @@ if not empty_pos(pos, 'CD'):
 
 original_input = input
 # input = input.lower()  # Converting the input to lower case so we can specify only lower case words in config
-input = input.replace('?','')  # Strip question marks
+input = input.replace('?', '')  # Strip question marks
 
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
 series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
@@ -120,6 +136,14 @@ cfg_helpers = {
             team2 -> """ + team_list + """
             team3 -> """ + team_list + """
             """,
+    'player': """
+            player -> player1 player2 player3
+            player -> player1 player2
+            player -> player1
+            player1 -> %s
+            player2 -> %s
+            player3 -> %s
+            """ % (NNP, NNP, NNP),
     'series': """
             series -> series1 series2 series3
             series -> series1 series2
@@ -160,17 +184,20 @@ cfg_parsers.append(
  """ % cfg_helpers['team']))
 
 cfg_parsers.append(nltk.CFG.fromstring("""
- scores -> question filler extent filler team
- scores -> extent filler team
- scores -> extent class filler team
- %s
- question -> 'what'
- %s
- class -> 'ODI' | 'test'
- filler -> filler filler
- filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'
- IN -> 'between' | 'of'
- """ % (cfg_helpers['team'], cfg_helpers['extent'])))
+     scores -> question filler extent filler team
+     scores -> extent filler team
+     scores -> extent class filler team
+     scores -> player recent filler
+     recent -> 'recent'
+     %s
+     %s
+     question -> 'what'
+     %s
+     class -> 'ODI' | 'test'
+     filler -> filler filler
+     filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'
+     IN -> 'between' | 'of'
+ """ % (cfg_helpers['player'], cfg_helpers['team'], cfg_helpers['extent'])))
 
 cfg_parsers.append(
     nltk.CFG.fromstring("""
@@ -213,19 +240,14 @@ cfg_parsers.append(
     player_stats -> player stats this_last year
     player_stats -> player stats filler year
     player_stats -> player stats filler series year
-    player -> player1 player2 player3
-    player -> player1 player2
-    player -> player1
-    player1 -> %s
-    player2 -> %s
-    player3 -> %s
+    %s
     %s
     %s
     %s
     year -> %s
     year -> 'year'
     stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-    """ % (NNP, NNP, NNP, cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD))
+    """ % (cfg_helpers['player'], cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD))
 )
 
 cfg_parsers.append(
