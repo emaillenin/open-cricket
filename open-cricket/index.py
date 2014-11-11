@@ -85,17 +85,16 @@ def send_result(result):
         print(json)
         exit(0)
 
-
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'Suresh Raina recent scores'
+    input = 'which player has the most sixes in world cup 2011'
 
 logging.info("Input search: %s", input)
 
 title_case_pattern = re.compile('^[A-Z].*')
 
-title_case_words = [word for word in input.split(' ') if title_case_pattern.match(word)]
+title_case_words = [word for word in input.split(' ') if title_case_pattern.match(word)] + ['Default']
 
 tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
@@ -121,12 +120,13 @@ input = input.replace('?', '')  # Strip question marks
 
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
 series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
+metric_list = ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs', 'wickets']
 
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
     'this_last': "this_last -> 'this' | 'last'",
     'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
-    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'",
+    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in' | 'has' ",
     'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
     'team': """
             team -> team1 team2 team3
@@ -152,6 +152,9 @@ cfg_helpers = {
             series2 -> """ + series_list + """
             series3 -> """ + series_list + """
             """,
+    'metric': """
+            metric -> %s
+            """ % join_for_config(metric_list),
     'last_time': """
         last_time -> when was the last time
         when -> 'when'
@@ -168,6 +171,21 @@ cfg_helpers = {
         """
 
 }
+
+def expand_with_filters(base_syntax):
+    return """%s filler series
+              %s this_last year
+              %s filler year
+              %s filler series year
+              %s
+              %s
+              filler -> filler filler
+              %s
+              year -> %s
+              year -> 'year'
+              stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
+              """ % (base_syntax, base_syntax, base_syntax, base_syntax,  cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD)
+
 cfg_parsers = []
 
 cfg_parsers.append(
@@ -195,9 +213,9 @@ cfg_parsers.append(nltk.CFG.fromstring("""
      %s
      class -> 'ODI' | 'test'
      filler -> filler filler
-     filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in'
+     %s
      IN -> 'between' | 'of'
- """ % (cfg_helpers['player'], cfg_helpers['team'], cfg_helpers['extent'])))
+ """ % (cfg_helpers['player'], cfg_helpers['team'], cfg_helpers['extent'], cfg_helpers['filler'])))
 
 cfg_parsers.append(
     nltk.CFG.fromstring("""
@@ -233,21 +251,29 @@ cfg_parsers.append(
     """ % (cfg_helpers['last_time'], cfg_helpers['how_many_times'], cfg_helpers['team'], CD))
 )
 
+base_syntax = """player_stats -> player stats"""
 cfg_parsers.append(
     nltk.CFG.fromstring("""
-    player_stats -> player stats
-    player_stats -> player stats filler series
-    player_stats -> player stats this_last year
-    player_stats -> player stats filler year
-    player_stats -> player stats filler series year
     %s
     %s
     %s
+    """ % (base_syntax, expand_with_filters(base_syntax), cfg_helpers['player']))
+)
+
+base_syntax = """most_x -> who_player filler most metric"""
+cfg_parsers.append(
+    nltk.CFG.fromstring("""
     %s
-    year -> %s
-    year -> 'year'
-    stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-    """ % (cfg_helpers['player'], cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD))
+    %s
+    %s
+    who_player -> who
+    who_player -> which_player
+    who -> 'who'
+    which_player -> which player
+    which -> 'which'
+    player -> 'player'
+    most -> 'most'
+    """ % (base_syntax, expand_with_filters(base_syntax), cfg_helpers['metric']))
 )
 
 cfg_parsers.append(
