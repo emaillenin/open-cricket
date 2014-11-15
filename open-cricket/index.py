@@ -15,10 +15,11 @@ def parse_input(grammar):
         result = nltk.ChartParser(grammar).parse(input.split())
         send_result(result)
     except ValueError:
-        try:
-            result = nltk.ChartParser(grammar).parse(original_input.split())
-            send_result(result)
-        except ValueError:
+        # Parsing only lower case sentences
+        # try:
+        #     result = nltk.ChartParser(grammar).parse(original_input.split())
+        #     send_result(result)
+        # except ValueError:
             pass
 
 
@@ -88,7 +89,7 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'which player has the most sixes in world cup 2011'
+    input = 'which player has the most runs in 2011 in Test'
 
 logging.info("Input search: %s", input)
 
@@ -115,18 +116,22 @@ if not empty_pos(pos, 'CD'):
 # TODO Consider all Title cased words (eg., ) as NNP, since NLTK cannot detect all player names accurately
 
 original_input = input
-# input = input.lower()  # Converting the input to lower case so we can specify only lower case words in config
+input = input.lower()  # Converting the input to lower case so we can specify only lower case words in config
 input = input.replace('?', '')  # Strip question marks
 
+filler_list = ['is' , 'are' , 'the' , 'scores' , 'score' , 'for' , 'by' , 'of' , 'in' , 'has']
 team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
 series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
 metric_list = ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs', 'wickets']
+match_type_list = ['test', 'odi', 't20i', 't20']
 
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
     'this_last': "this_last -> 'this' | 'last'",
     'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
-    'filler': "filler -> 'is' | 'are' | 'the' | 'scores' | 'score' | 'for' | 'by' | 'of' | 'in' | 'has' ",
+    'filler': """
+            filler -> %s
+            """ % join_for_config(filler_list),
     'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
     'team': """
             team -> team1 team2 team3
@@ -155,36 +160,49 @@ cfg_helpers = {
     'metric': """
             metric -> %s
             """ % join_for_config(metric_list),
+    'in_match_type': """
+            match_type -> %s
+            """ % join_for_config(match_type_list),
     'last_time': """
-        last_time -> when was the last time
-        when -> 'when'
-        was -> 'was'
-        the -> 'the'
-        last -> 'last'
-        time -> 'time'
-        """,
+            last_time -> when was the last time
+            when -> 'when'
+            was -> 'was'
+            the -> 'the'
+            last -> 'last'
+            time -> 'time'
+            """,
     'how_many_times': """
-        how_many_times -> how many times
-        how -> 'how'
-        many -> 'many'
-        times -> 'times'
-        """
+            how_many_times -> how many times
+            how -> 'how'
+            many -> 'many'
+            times -> 'times'
+            """
 
 }
 
 def expand_with_filters(base_syntax):
-    return """%s filler series
+    return """
+              %s filler match_type
+              %s filler series
+              %s filler series filler match_type
               %s this_last year
+              %s this_last year filler match_type
               %s filler year
+              %s filler year filler match_type
               %s filler series year
+              %s filler series year filler match_type
               %s
               %s
               filler -> filler filler
               %s
+              %s
               year -> %s
               year -> 'year'
               stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-              """ % (base_syntax, base_syntax, base_syntax, base_syntax,  cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'], CD)
+              """ % (base_syntax, base_syntax, base_syntax, base_syntax, base_syntax,
+                     base_syntax, base_syntax, base_syntax, base_syntax,
+                     cfg_helpers['series'], cfg_helpers['this_last'], cfg_helpers['filler'],
+                     cfg_helpers['in_match_type'], CD)
 
 cfg_parsers = []
 
