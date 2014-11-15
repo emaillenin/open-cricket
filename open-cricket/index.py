@@ -89,13 +89,13 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'which player has the most runs in 2011 in Test'
+    input = 'MS Dhoni recent scores'
 
 logging.info("Input search: %s", input)
 
 title_case_pattern = re.compile('^[A-Z].*')
 
-title_case_words = [word for word in input.split(' ') if title_case_pattern.match(word)] + ['Default']
+title_case_words = [word.lower() for word in input.split(' ') if title_case_pattern.match(word)] + ['default']
 
 tokens = nltk.word_tokenize(input)
 pos = nltk.pos_tag(tokens)
@@ -230,7 +230,9 @@ cfg_parsers.append(nltk.CFG.fromstring("""
      question -> 'what'
      %s
      class -> 'ODI' | 'test'
-     filler -> filler filler
+     filler -> filler1 filler2
+     filler1 -> filler
+     filler2 -> filler
      %s
      IN -> 'between' | 'of'
  """ % (cfg_helpers['player'], cfg_helpers['team'], cfg_helpers['extent'], cfg_helpers['filler'])))
