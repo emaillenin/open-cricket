@@ -89,7 +89,7 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'MS Dhoni recent scores'
+    input = 'Virat Kohli best score'
 
 logging.info("Input search: %s", input)
 
@@ -223,8 +223,8 @@ cfg_parsers.append(nltk.CFG.fromstring("""
      scores -> question filler extent filler team
      scores -> extent filler team
      scores -> extent class filler team
-     scores -> player recent filler
-     recent -> 'recent'
+     scores -> player period filler
+     period -> 'recent' | 'best' | 'highest'
      %s
      %s
      question -> 'what'
