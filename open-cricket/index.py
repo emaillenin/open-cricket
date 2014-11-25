@@ -89,7 +89,7 @@ def send_result(result):
 if len(sys.argv) > 1:
     input = ' '.join(sys.argv[1:])
 else:
-    input = 'Virat Kohli best score'
+    input = 'Sehwag vs Dhoni'
 
 logging.info("Input search: %s", input)
 
@@ -127,6 +127,7 @@ match_type_list = ['test', 'odi', 't20i', 't20']
 
 cfg_helpers = {
     'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
+    'cc': "CC -> 'and' | '&' | 'vs'",
     'this_last': "this_last -> 'this' | 'last'",
     'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
     'filler': """
@@ -215,9 +216,9 @@ cfg_parsers.append(
  teamA -> team
  teamB -> team
  %s
- CC -> 'and' | '&' | 'vs'
+ %s
  IN -> 'between' | 'of'
- """ % cfg_helpers['team']))
+ """ % (cfg_helpers['team'], cfg_helpers['cc'])))
 
 cfg_parsers.append(nltk.CFG.fromstring("""
      scores -> question filler extent filler team
@@ -305,6 +306,18 @@ cfg_parsers.append(
     %s
     %s
 """ % (cfg_helpers['filler'], cfg_helpers['team'], cfg_helpers['dismissals']))
+)
+
+cfg_parsers.append(
+    nltk.CFG.fromstring("""
+    compare -> compare_word player_1 CC player_2
+    compare -> player_1 CC player_2
+    player_1 -> player
+    player_2 -> player
+    compare_word -> 'compare'
+    %s
+    %s
+""" % (cfg_helpers['player'], cfg_helpers['cc']))
 )
 
 
