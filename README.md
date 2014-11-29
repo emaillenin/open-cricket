@@ -36,3 +36,11 @@ Why?
 With huge amount of stats being generated every day, it is becoming really difficult to unearth the awesome facts that you wanted to know.
 And Wolfram Alpha does not support Cricket subject (yet)!
 
+Contribute
+==========
+
+Setup your development machine:
+
+ - install nltk & nltk data
+ - sudo pip install Flask
+ - python flaskr.py to start the server

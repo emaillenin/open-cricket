@@ -1,3 +1,4 @@
 .idea/
 extract.config
 *.log
+.DS_Store

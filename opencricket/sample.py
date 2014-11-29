@@ -18,4 +18,4 @@ for line in open('./config/sentences.txt', 'r'):
     cp = nltk.RegexpParser(grammar)
     result = cp.parse(pos[0])
     # print result
-    print nltk.ne_chunk(pos[0])
+    print (nltk.ne_chunk(pos[0]))
