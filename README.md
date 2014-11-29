@@ -1,5 +1,6 @@
 Open Cricket
 ============
+[![Build Status](https://travis-ci.org/emaillenin/open-cricket.svg?branch=master)](https://travis-ci.org/emaillenin/open-cricket)
 
 Open access to cricket stats.
 
