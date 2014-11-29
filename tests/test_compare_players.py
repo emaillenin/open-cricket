@@ -16,6 +16,7 @@ class TestComparePlayers(unittest.TestCase):
         parser = SentenceParser(self.input)
         self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
 
+    def test_vs(self):
         parser_2 = SentenceParser(self.input_vs)
         self.assertEqual(json.loads(self.expected_vs), json.loads(parser_2.parse_sentence()))
 
