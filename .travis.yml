@@ -1,7 +1,9 @@
 language: python
 python:
   - "3.4"
+env:
+  - NLTK_DATA=`pwd`
 install: 
   - pip install -r requirements.txt
-  - python -m nltk.downloader -d /usr/share/nltk_data all
+  - python -m nltk.downloader -d . all
 script: nosetests
