@@ -16,7 +16,7 @@ def search():
 
 @app.route("/ping")
 def ping():
-    return '', 200
+    return 'OK', 200
 
 
 if __name__ == "__main__":
