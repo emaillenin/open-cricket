@@ -7,7 +7,12 @@ app = Flask(__name__)
 
 @app.route("/")
 def search():
-    parser = SentenceParser(request.args.get('search', ''))
+    try:
+        parser = SentenceParser(request.args.get('search', ''))
+    except Exception as e:
+        print e.__doc__
+        print e.message
+        abort(500)
     result = parser.parse_sentence()
     if result is not None:
         return result
