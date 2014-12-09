@@ -162,16 +162,16 @@ class SentenceParser:
                 self.cfg_helpers['last_time'], self.cfg_helpers['how_many_times'], self.cfg_helpers['team'], self.CD))
         )
 
-        base_syntax = """player_stats -> player stats"""
+        base_syntax_player_stats = """player_stats -> player stats"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
             %s
             %s
-            """ % (base_syntax, self.expand_with_filters(base_syntax), self.cfg_helpers['player']))
+            """ % (base_syntax_player_stats, self.expand_with_filters(base_syntax_player_stats), self.cfg_helpers['player']))
         )
 
-        base_syntax = """most_x -> who_player filler most metric"""
+        base_syntax_most_x = """most_x -> who_player filler most metric"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
@@ -184,7 +184,7 @@ class SentenceParser:
             which -> 'which'
             player -> 'player'
             most -> 'most'
-            """ % (base_syntax, self.expand_with_filters(base_syntax), self.cfg_helpers['metric']))
+            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric']))
         )
 
         self.cfg_parsers.append(
@@ -198,16 +198,18 @@ class SentenceParser:
         """ % (self.cfg_helpers['filler'], self.cfg_helpers['team'], self.cfg_helpers['dismissals']))
         )
 
+        base_syntax_compare = 'compare -> compare_word player_1 CC player_2'
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-            compare -> compare_word player_1 CC player_2
+            %s
+            %s
             compare -> player_1 CC player_2
             player_1 -> player
             player_2 -> player
             compare_word -> 'compare'
             %s
             %s
-        """ % (self.cfg_helpers['player'], self.cfg_helpers['cc']))
+        """ % (base_syntax_compare, self.expand_with_filters(base_syntax_compare), self.cfg_helpers['player'], self.cfg_helpers['cc']))
         )
 
 
