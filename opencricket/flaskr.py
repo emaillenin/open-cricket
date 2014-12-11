@@ -10,8 +10,8 @@ def search():
     try:
         parser = SentenceParser(request.args.get('search', ''))
     except Exception as e:
-        print e.__doc__
-        print e.message
+        print(e.__doc__)
+        print(e.message)
         abort(500)
     result = parser.parse_sentence()
     if result is not None:
