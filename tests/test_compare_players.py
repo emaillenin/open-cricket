@@ -9,9 +9,6 @@ class TestComparePlayers(unittest.TestCase):
         self.input = 'compare Sehwag and Dhoni'
         self.expected = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "CC": "and", "compare_word": "compare"}}'
 
-        self.input_vs = 'Sehwag vs Dhoni'
-        self.expected_vs = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "CC": "vs"}}'
-
         self.input_compare_year = 'compare Sehwag vs Dhoni in 2011'
         self.expected_compare_year = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "CC": "vs", "compare_word": "compare", "filler": "in", "year": "2011"}}'
 
@@ -21,10 +18,6 @@ class TestComparePlayers(unittest.TestCase):
     def test_search(self):
         parser = SentenceParser(self.input)
         self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
-
-    def test_vs(self):
-        parser_2 = SentenceParser(self.input_vs)
-        self.assertEqual(json.loads(self.expected_vs), json.loads(parser_2.parse_sentence()))
 
     def test_compare_in_a_year(self):
         parser = SentenceParser(self.input_compare_year)

@@ -4,6 +4,7 @@ import logging
 import os
 import json
 import re
+import itertools
 
 
 class SentenceParser:
@@ -28,11 +29,21 @@ class SentenceParser:
         if not self.empty_pos(pos, 'CD'):
             self.CD = self.join_for_config(self.extract_words_with_tag(pos, 'CD'))
 
-        filler_list = ['is', 'are', 'the', 'scores', 'score', 'for', 'by', 'of', 'in', 'has']
-        team_list = "'india' | 'pakistan' | 'australia' | 'england' | 'zimbabwe' | 'bangladesh' | 'afghanistan' | 'kenya' | 'ireland' | 'netherlands' | 'netherland' | 'scotland' | 'canada' | 'bermuda' | 'namibia' | 'usa' | 'chennai' | 'super' | 'kings' | 'csk' | 'royal' |  'challengers' | 'bangalore' | 'rcb' | 'rajastan' | 'royals' | 'rr' | 'sunrisers' | 'hyderabad' | 'srh' | 'mumbai' | 'indians' | 'mi' | 'kings' | 'xi' | 'punjab' | 'kxip' | 'kolkata' | 'knight' | 'riders' | 'kkr' | 'pune' | 'warriors' | 'pwi' | 'delhi' | 'daredevils' | 'dd' | 'new' | 'zealand' | 'nz' | 'south' | 'africa' | 'sa' | 'sri' | 'lanka' | 'sl' | 'west' | 'indies' | 'wi' | 'uae' | 'east' | 'hong' | 'kong'"
-        series_list = "'ipl' | 'indian' | 'premier'| 'league' | 'champions' | 'league' | 't20' | 'world' | 'cup' | 'clt20' | 't20' | 'trophy' | 'icc' | 'twenty20'"
-        metric_list = ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
-                       'wickets']
+        filler_list = self.join_for_config(
+            ['is', 'are', 'the', 'scores', 'score', 'for', 'by', 'of', 'in', 'has', 'at'])
+        team_list = self.join_for_config(
+            ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya', 'ireland',
+             'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai', 'super',
+             'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr', 'sunrisers',
+             'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata', 'knight',
+             'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand', 'nz', 'south',
+             'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong', 'kong'])
+        series_list = self.join_for_config(
+            ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 't20', 'world', 'cup', 'clt20',
+             't20', 'trophy', 'icc', 'twenty20'])
+        metric_list = self.join_for_config(
+            ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
+             'wickets'])
         match_type_list = ['test', 'odi', 't20i', 't20']
 
         self.cfg_helpers = {
@@ -42,7 +53,7 @@ class SentenceParser:
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
                     filler -> %s
-                    """ % self.join_for_config(filler_list),
+                    """ % filler_list,
             'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
             'team': """
                     team -> team1 team2 team3
@@ -60,6 +71,14 @@ class SentenceParser:
                     player2 -> %s
                     player3 -> %s
                     """ % (self.NNP, self.NNP, self.NNP),
+            'ground': """
+                    ground -> ground1 ground2 ground3
+                    ground -> ground1 ground2
+                    ground -> ground1
+                    ground1 -> %s
+                    ground2 -> %s
+                    ground3 -> %s
+                    """ % (self.NNP, self.NNP, self.NNP),
             'series': """
                     series -> series1 series2 series3
                     series -> series1 series2
@@ -70,7 +89,7 @@ class SentenceParser:
                     """,
             'metric': """
                     metric -> %s
-                    """ % self.join_for_config(metric_list),
+                    """ % metric_list,
             'in_match_type': """
                     match_type -> %s
                     """ % self.join_for_config(match_type_list),
@@ -88,23 +107,24 @@ class SentenceParser:
                     many -> 'many'
                     times -> 'times'
                     """
-
         }
 
         self.cfg_parsers = []
 
+        base_syntax_matches = """matches -> select IN clause"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-         matches -> select clause
-         matches -> select IN clause
-         clause -> teamA CC teamB
-         select -> 'matches' | 'match' | 'games' | 'game'
-         teamA -> team
-         teamB -> team
-         %s
-         %s
-         IN -> 'between' | 'of'
-         """ % (self.cfg_helpers['team'], self.cfg_helpers['cc'])))
+                %s
+                %s
+                clause -> teamA CC teamB
+                select -> 'matches' | 'match' | 'games' | 'game'
+                teamA -> team
+                teamB -> team
+                %s
+                %s
+                IN -> 'between' | 'of'
+                """ % (base_syntax_matches, self.expand_with_filters(base_syntax_matches), self.cfg_helpers['team'],
+                       self.cfg_helpers['cc'])))
 
         self.cfg_parsers.append(nltk.CFG.fromstring("""
              scores -> question filler extent filler team
@@ -168,7 +188,9 @@ class SentenceParser:
             %s
             %s
             %s
-            """ % (base_syntax_player_stats, self.expand_with_filters(base_syntax_player_stats), self.cfg_helpers['player']))
+            """ % (
+                base_syntax_player_stats, self.expand_with_filters(base_syntax_player_stats),
+                self.cfg_helpers['player']))
         )
 
         base_syntax_most_x = """most_x -> who_player filler most metric"""
@@ -203,13 +225,13 @@ class SentenceParser:
             nltk.CFG.fromstring("""
             %s
             %s
-            compare -> player_1 CC player_2
             player_1 -> player
             player_2 -> player
             compare_word -> 'compare'
             %s
             %s
-        """ % (base_syntax_compare, self.expand_with_filters(base_syntax_compare), self.cfg_helpers['player'], self.cfg_helpers['cc']))
+        """ % (base_syntax_compare, self.expand_with_filters(base_syntax_compare), self.cfg_helpers['player'],
+               self.cfg_helpers['cc']))
         )
 
 
@@ -234,28 +256,39 @@ class SentenceParser:
         return '"' + '" | "'.join([p[0] for p in pos if p[1] == tag]) + '"'
 
     def expand_with_filters(self, base_syntax):
-        return """
-                  %s filler match_type
-                  %s filler series
-                  %s filler series filler match_type
-                  %s this_last year
-                  %s this_last year filler match_type
-                  %s filler year
-                  %s filler year filler match_type
-                  %s filler series year
-                  %s filler series year filler match_type
-                  %s
-                  %s
-                  filler -> filler filler
-                  %s
-                  %s
-                  year -> %s
-                  year -> 'year'
-                  stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-                  """ % (base_syntax, base_syntax, base_syntax, base_syntax, base_syntax,
-                         base_syntax, base_syntax, base_syntax, base_syntax,
-                         self.cfg_helpers['series'], self.cfg_helpers['this_last'], self.cfg_helpers['filler'],
-                         self.cfg_helpers['in_match_type'], self.CD)
+        final_syntax = ''
+        for f in self.permutate_filters():
+            final_syntax += """
+                                %s %s
+                                %s filler %s
+                                %s filler %s
+                            """ % (base_syntax, ' '.join(f), base_syntax, ' '.join(f), base_syntax, ' filler '.join(f))
+        final_syntax += """
+                              %s
+                              %s
+                              filler -> filler filler
+                              %s
+                              %s
+                              %s
+                              year -> %s
+                              year -> 'year'
+                              stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
+                        """ % (self.cfg_helpers['series'], self.cfg_helpers['this_last'], self.cfg_helpers['filler'],
+                               self.cfg_helpers['in_match_type'], self.cfg_helpers['ground'], self.CD)
+        return final_syntax
+
+    @staticmethod
+    def permutate_filters():
+        filters = ['match_type', 'series', 'year', 'ground']
+        permutated_filters = []
+        for i in range(1, len(filters) + 1):
+            for f in itertools.permutations(filters, i):
+                permutated_filters += [list(f)]
+                if 'year' in f:
+                    this_last_year_list = list(f)
+                    this_last_year_list[this_last_year_list.index('year')] = 'this_last year'
+                    permutated_filters += [this_last_year_list]
+        return permutated_filters
 
     def parse_sentence(self):
         logging.basicConfig(
@@ -277,17 +310,6 @@ class SentenceParser:
         except ValueError:
             pass
 
-    def tree_to_list(self, tree):  # convert tree to list
-        result = ''
-        if isinstance(tree, nltk.Tree) and isinstance(tree[0], nltk.Tree):
-            result += self.str_wrap(tree.label()) + ' : ' + ",".join([self.tree_to_list(t) for t in tree]) + "  }"
-        elif isinstance(tree, nltk.Tree):
-            result += self.str_wrap(tree.label()) + ' : ' + self.str_wrap(tree[0])
-        else:
-            result += self.str_wrap(tree) + ",  "
-        return result
-
-
     def tree_to_dict(self, tree):
         tdict = {}
         for t in tree:
@@ -299,13 +321,6 @@ class SentenceParser:
 
     def dict_to_json(self, dictionary):
         return json.dumps(dictionary)
-
-    def analyze_tree(self, tree):
-        for t in tree:
-            print(t.label())
-            print(len(t))
-            print(t[0].__class__)
-            if t[0].__class__.__name__ == 'Tree': self.analyze_tree(t[0])
 
     def send_result(self, result):
         result_list = list(result)
