@@ -23,7 +23,7 @@ Open Cricket aims to provide free access to all cricket statistics via API. By s
 
 Apart from raw stats, you can also ask questions like
 
- - When was the last time India chased down 300+ successfully?
+ - When was the last time India chased down 300+ in Chennai?
  - Which team has the most number of the consecutive wins this year?
  - Yuvraj's performance in world cup finals?
  - When did Shoaib Akhtar took Sachin's wicket with a golden duck?

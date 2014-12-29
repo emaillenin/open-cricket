@@ -163,10 +163,11 @@ class SentenceParser:
         """ % (self.cfg_helpers['extent'], self.cfg_helpers['filler'], self.cfg_helpers['wkt_order'],
                self.cfg_helpers['team'])))
 
+        base_syntax_matches_cond = 'matches_cond -> what team chased_s score'
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-                matches_cond -> what team chased_s score
-                matches_cond -> what team chased_s score filler
+                %s
+                %s
                 what -> last_time
                 what -> how_many_times
                 %s
@@ -177,8 +178,7 @@ class SentenceParser:
                 chased -> 'chased' | 'chase'
                 down -> 'down'
                 score -> %s
-                filler -> 'successfully'
-            """ % (
+            """ % (base_syntax_matches_cond, self.expand_with_filters(base_syntax_matches_cond),
                 self.cfg_helpers['last_time'], self.cfg_helpers['how_many_times'], self.cfg_helpers['team'], self.CD))
         )
 
