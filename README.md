@@ -4,12 +4,12 @@ Open Cricket
 
 Open access to cricket stats.
 
-by [DuggOut.com](http://www.duggout.com)
+by [DuggOut.com](http://duggout.com)
 
 Live Demo
 =========
 
-An implementation of Open Cricket is avaiable at [http://duggout.com/ask](http://duggout.com/ask)
+An implementation of Open Cricket is available at [http://duggout.com/open-cricket](http://duggout.com/open-cricket)
 
 About
 =====
