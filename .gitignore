@@ -1,5 +1,6 @@
 .idea/
 extract.config
+config.py
 *.log
 .DS_Store
 

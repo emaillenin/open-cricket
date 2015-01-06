@@ -9,9 +9,10 @@ import nltk
 
 class TrainCricketPlayers():
 
-    def __init__(self, trained_picke_file_path):
-        self.tagger = nltk.data.load(trained_picke_file_path)
+    def __init__(self, trained_pickle_file_path):
+        self.tagger = nltk.data.load(trained_pickle_file_path)
 
     def get_names(self, input):
         tokens = nltk.word_tokenize(input)
-        return self.tagger.tag(tokens)
+        tags = self.tagger.tag(tokens)
+        return [p[0] for p in tags if p[1] == 'NNP']

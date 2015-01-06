@@ -6,4 +6,5 @@ env:
 install: 
   - pip install -r requirements.txt
   - python -m nltk.downloader -d . all
+  - cp opencricket/config/config.ci.py opencricket/config/config.py
 script: nosetests

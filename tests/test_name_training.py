@@ -9,8 +9,12 @@ class TestNameTraining(unittest.TestCase):
     def test_simple_names(self):
         training = TrainCricketPlayers(os.path.join(os.path.dirname(__file__), 'data', 'player_names.pickle'))
         tagged_words = training.get_names('what is the best score of dhoni and virat')
-        player_names = [p[0] for p in tagged_words if p[1] == 'NNP']
-        self.assertListEqual(player_names, ['dhoni', 'virat'])
+        self.assertListEqual(tagged_words, ['dhoni', 'virat'])
+
+    def test_no_names(self):
+        training = TrainCricketPlayers(os.path.join(os.path.dirname(__file__), 'data', 'player_names.pickle'))
+        tagged_words = training.get_names('what is the best score of someone')
+        self.assertListEqual(tagged_words, [])
 
 if __name__ == '__main__':
     unittest.main()

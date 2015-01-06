@@ -1,5 +1,6 @@
 import nltk
-import sys
+from opencricket.config import config
+from corpus.training import cricket_players
 import logging
 import os
 import json
@@ -14,18 +15,23 @@ class SentenceParser:
         title_case_pattern = re.compile('^[A-Z].*')
         title_case_words = [word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
             'default']
+        trained_player_names = config.metadata_dir + 'player_names.pickle'
 
         self.input = sentence.lower().replace('?',
                                               '')  # Converting the input to lower case so we can specify only lower case words in config
 
+        tagger = cricket_players.TrainCricketPlayers(trained_player_names)
+        player_names = tagger.get_names(self.input)
         tokens = nltk.word_tokenize(self.input)
         pos = nltk.pos_tag(tokens)
 
         self.NNP = self.join_for_config(title_case_words)
+        self.player_names = self.join_for_config(title_case_words + player_names)
         self.CD = '"0"'
 
         if not self.empty_pos(pos, 'NNP'):
             self.NNP = self.join_for_config(list(set(title_case_words + self.extract_words_with_tag(pos, 'NNP'))))
+            self.player_names = self.join_for_config(list(set(title_case_words + self.extract_words_with_tag(pos, 'NNP') + player_names)))
         if not self.empty_pos(pos, 'CD'):
             self.CD = self.join_for_config(self.extract_words_with_tag(pos, 'CD'))
 
