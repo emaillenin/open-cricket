@@ -7,8 +7,10 @@ import itertools
 
 
 class SentenceParser:
-    def __init__(self, sentence, player_names = []):
+    def __init__(self, sentence, player_names=None):
 
+        if not player_names:
+            player_names = []
         self.input = sentence
         title_case_pattern = re.compile('^[A-Z].*')
         title_case_words = [word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
@@ -26,7 +28,8 @@ class SentenceParser:
 
         if not self.empty_pos(pos, 'NNP'):
             self.NNP = self.join_for_config(list(set(title_case_words + self.extract_words_with_tag(pos, 'NNP'))))
-            self.player_names = self.join_for_config(list(set(title_case_words + self.extract_words_with_tag(pos, 'NNP') + player_names)))
+            self.player_names = self.join_for_config(
+                list(set(title_case_words + self.extract_words_with_tag(pos, 'NNP') + player_names)))
         if not self.empty_pos(pos, 'CD'):
             self.CD = self.join_for_config(self.extract_words_with_tag(pos, 'CD'))
 
@@ -71,7 +74,7 @@ class SentenceParser:
                     player1 -> %s
                     player2 -> %s
                     player3 -> %s
-                    """ % (self.NNP, self.NNP, self.NNP),
+                    """ % (self.player_names, self.player_names, self.player_names),
             'ground': """
                     ground -> ground1 ground2 ground3
                     ground -> ground1 ground2
@@ -180,7 +183,8 @@ class SentenceParser:
                 down -> 'down'
                 score -> %s
             """ % (base_syntax_matches_cond, self.expand_with_filters(base_syntax_matches_cond),
-                self.cfg_helpers['last_time'], self.cfg_helpers['how_many_times'], self.cfg_helpers['team'], self.CD))
+                   self.cfg_helpers['last_time'], self.cfg_helpers['how_many_times'], self.cfg_helpers['team'],
+                   self.CD))
         )
 
         base_syntax_player_stats = """player_stats -> player stats"""
