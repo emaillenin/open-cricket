@@ -1,6 +1,9 @@
 from flask import Flask, request, abort
+import sys, os
 
-from chart.sentence_parser import SentenceParser
+sys.path.append(os.path.dirname(__file__))
+
+from opencricket.chart.sentence_parser import SentenceParser
 
 app = Flask(__name__)
 

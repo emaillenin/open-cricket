@@ -1,6 +1,6 @@
 import nltk
-from opencricket.config import config
 from corpus.training import cricket_players
+from opencricket.config import config
 import logging
 import os
 import json
