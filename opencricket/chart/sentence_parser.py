@@ -1,6 +1,4 @@
 import nltk
-from corpus.training import cricket_players
-from opencricket.config import config
 import logging
 import os
 import json
@@ -9,19 +7,16 @@ import itertools
 
 
 class SentenceParser:
-    def __init__(self, sentence):
+    def __init__(self, sentence, player_names = []):
 
         self.input = sentence
         title_case_pattern = re.compile('^[A-Z].*')
         title_case_words = [word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
             'default']
-        trained_player_names = config.metadata_dir + 'player_names.pickle'
 
         self.input = sentence.lower().replace('?',
                                               '')  # Converting the input to lower case so we can specify only lower case words in config
 
-        tagger = cricket_players.TrainCricketPlayers(trained_player_names)
-        player_names = tagger.get_names(self.input)
         tokens = nltk.word_tokenize(self.input)
         pos = nltk.pos_tag(tokens)
 

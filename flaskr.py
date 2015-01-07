@@ -1,9 +1,13 @@
+import sys
+import os
+from opencricket.config import config
+
 from flask import Flask, request, abort
-import sys, os
 
 sys.path.append(os.path.dirname(__file__))
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.chart.player_names import PlayerNames
 
 app = Flask(__name__)
 
@@ -11,7 +15,9 @@ app = Flask(__name__)
 @app.route("/")
 def search():
     try:
-        parser = SentenceParser(request.args.get('search', ''))
+        user_search = request.args.get('search', '')
+        player_names = PlayerNames(config.metadata_dir + 'player_names.txt').get_player_names(user_search)
+        parser = SentenceParser(user_search, player_names)
     except Exception as e:
         print(e.__doc__)
         print(e.message)
