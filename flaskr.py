@@ -2,11 +2,12 @@ import sys
 import os
 from opencricket.config import config
 
-from flask import Flask, request, abort
+from flask import Flask, request, abort, make_response
 
 sys.path.append(os.path.dirname(__file__))
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.suggestion.productions import Productions
 from opencricket.chart.player_names import PlayerNames
 
 app = Flask(__name__)
@@ -27,6 +28,12 @@ def search():
         return result
     else:
         abort(422)
+
+@app.route("/productions")
+def production():
+    r = make_response(Productions().productions())
+    r.mimetype = 'application/json'
+    return r
 
 @app.route("/ping")
 def ping():

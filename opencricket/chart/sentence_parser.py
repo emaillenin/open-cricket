@@ -51,9 +51,10 @@ class SentenceParser:
         match_type_list = ['test', 'odi', 't20i', 't20']
 
         self.cfg_helpers = {
+            'word_in': "word_in -> 'in'",
+            'word_this_last': "word_this_last -> 'this' | 'last'",
             'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
             'cc': "CC -> 'and' | '&' | 'vs'",
-            'this_last': "this_last -> 'this' | 'last'",
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
                     filler -> %s
@@ -187,12 +188,13 @@ class SentenceParser:
                    self.CD))
         )
 
-        base_syntax_player_stats = """player_stats -> player stats"""
+        base_syntax_player_stats = """player_stats -> player word_stats"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
             %s
             %s
+            word_stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
             """ % (
                 base_syntax_player_stats, self.expand_with_filters(base_syntax_player_stats),
                 self.cfg_helpers['player']))
@@ -264,21 +266,17 @@ class SentenceParser:
         final_syntax = ''
         for f in self.permutate_filters():
             final_syntax += """
-                                %s %s
-                                %s filler %s
-                                %s filler %s
-                            """ % (base_syntax, ' '.join(f), base_syntax, ' '.join(f), base_syntax, ' filler '.join(f))
+                                %s word_in %s
+                            """ % (base_syntax, ' word_in '.join(f))
         final_syntax += """
                               %s
                               %s
-                              filler -> filler filler
                               %s
                               %s
                               %s
                               year -> %s
                               year -> 'year'
-                              stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
-                        """ % (self.cfg_helpers['series'], self.cfg_helpers['this_last'], self.cfg_helpers['filler'],
+                        """ % (self.cfg_helpers['series'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],
                                self.cfg_helpers['in_match_type'], self.cfg_helpers['ground'], self.CD)
         return final_syntax
 
@@ -291,7 +289,7 @@ class SentenceParser:
                 permutated_filters += [list(f)]
                 if 'year' in f:
                     this_last_year_list = list(f)
-                    this_last_year_list[this_last_year_list.index('year')] = 'this_last year'
+                    this_last_year_list[this_last_year_list.index('year')] = 'word_this_last year'
                     permutated_filters += [this_last_year_list]
         return permutated_filters
 
