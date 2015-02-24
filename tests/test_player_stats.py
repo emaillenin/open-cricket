@@ -19,10 +19,10 @@ class TestPlayerStats(unittest.TestCase):
         self.expected_year = '{"player_stats": {"player": {"player1": "kumar", "player2": "sangakkara"}, "word_stats": "stats", "year": "2011", "word_in": "in"}}'
 
         self.input_this_year = 'Sachin Tendulkar stats in this year'
-        self.expected_this_year = '{"player_stats": {"year": "year", "this_last": "this",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
+        self.expected_this_year = '{"player_stats": {"year": "year", "word_this_last": "this",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
 
         self.input_last_year = 'Sachin Tendulkar stats in last year'
-        self.expected_last_year = '{"player_stats": {"year": "year", "this_last": "last",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
+        self.expected_last_year = '{"player_stats": {"year": "year", "word_this_last": "last",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
 
     def test_search_stats(self):
         parser = SentenceParser(self.input_stats)

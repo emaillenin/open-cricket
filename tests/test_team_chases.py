@@ -10,7 +10,7 @@ class TestTeamChases(unittest.TestCase):
         self.expected = '{"matches_cond": {"chased_s": {"down": "down", "chased": "chased"}, "what": {"last_time": {"was": "was", "the": "the", "when": "when", "last": "last", "time": "time"}}, "score": "300+", "team": {"team1": "india"}}}'
 
         self.input_ground = 'how many times india chased down 300+ in Chennai'
-        self.expected_ground = '{"matches_cond": {"filler": "in", "team": {"team1": "india"}, "what": {"how_many_times": {"times": "times", "how": "how", "many": "many"}}, "ground": {"ground1": "chennai"}, "chased_s": {"down": "down", "chased": "chased"}, "score": "300+"}}'
+        self.expected_ground = '{"matches_cond": {"word_in": "in", "team": {"team1": "india"}, "what": {"how_many_times": {"times": "times", "how": "how", "many": "many"}}, "ground": {"ground1": "chennai"}, "chased_s": {"down": "down", "chased": "chased"}, "score": "300+"}}'
 
     def test_search(self):
         parser = SentenceParser(self.input)
