@@ -50,11 +50,14 @@ class SentenceParser:
              'wickets'])
         match_type_list = ['test', 'odi', 't20i', 't20']
 
+        # TODO A dynamic generator for 'word' helpers
         self.cfg_helpers = {
             'word_in': "word_in -> 'in'",
             'word_has': "word_has -> 'has'",
             'word_articles': "word_articles -> 'a' | 'an' | 'the'",
             'word_this_last': "word_this_last -> 'this' | 'last'",
+            'word_year': "word_year -> 'year'",
+
             'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
             'cc': "CC -> 'and' | '&' | 'vs'",
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
@@ -196,7 +199,7 @@ class SentenceParser:
             %s
             %s
             %s
-            word_stats -> 'stats' | 'statistics' | 'scores' | 'runs' | 'wickets' | 'career'
+            word_stats -> 'stats'
             """ % (
                 base_syntax_player_stats, self.expand_with_filters(base_syntax_player_stats),
                 self.cfg_helpers['player']))
@@ -278,9 +281,9 @@ class SentenceParser:
                               %s
                               %s
                               %s
+                              %s
                               year -> %s
-                              year -> 'year'
-                        """ % (self.cfg_helpers['series'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],
+                        """ % (self.cfg_helpers['series'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],self.cfg_helpers['word_year'],
                                self.cfg_helpers['in_match_type'], self.cfg_helpers['ground'], self.CD)
         return final_syntax
 
@@ -293,7 +296,7 @@ class SentenceParser:
                 permutated_filters += [list(f)]
                 if 'year' in f:
                     this_last_year_list = list(f)
-                    this_last_year_list[this_last_year_list.index('year')] = 'word_this_last year'
+                    this_last_year_list[this_last_year_list.index('year')] = 'word_this_last word_year'
                     permutated_filters += [this_last_year_list]
         return permutated_filters
 
