@@ -43,8 +43,13 @@ def load_index():
     return r
 
 @app.route("/create_index")
-def load_index():
-    Productions().load_index(config.exploded_dir)
+def create_index():
+    Productions().create_index()
+    return ok()
+
+@app.route("/delete_index")
+def delete_index():
+    Productions().delete_index()
     return ok()
 
 @app.route("/ping")
