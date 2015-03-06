@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from opencricket.config import config
 
 from flask import Flask, request, abort, make_response
@@ -35,10 +36,25 @@ def production():
     r.mimetype = 'application/json'
     return r
 
+@app.route("/load_index")
+def load_index():
+    r = make_response(Productions().load_index(config.exploded_dir))
+    r.mimetype = 'application/json'
+    return r
+
+@app.route("/create_index")
+def load_index():
+    Productions().load_index(config.exploded_dir)
+    return ok()
+
 @app.route("/ping")
 def ping():
-    return 'OK', 200
+    return ok()
 
+def ok():
+    r = make_response(json.dumps({'status': 'ok'}))
+    r.mimetype = 'application/json'
+    return r
 
 if __name__ == "__main__":
-    app.run('127.0.0.1', 9001)
+    app.run('127.0.0.1', 9001, debug=True)

@@ -6,13 +6,20 @@ from itertools import product
 from collections import Counter
 from os.path import basename
 from opencricket.chart.sentence_parser import SentenceParser
-
+from _datetime import datetime
+import elasticsearch
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers
+from opencricket.config import es_config
 EXPANSIONS = 'expansions'
 SYNTAX = 'syntax'
 
 
 class Productions:
-    # def __init__(self):
+
+    def __init__(self, es_host = None):
+        if(es_host == None): es_host = '127.0.0.1'
+        self.es = Elasticsearch(hosts=es_host)
 
     def productions(self):
         # TODO While producing expansions, use Map Reduce instead of Iteration
@@ -59,6 +66,25 @@ class Productions:
                     final_items = [reference_expansions[item] for item in items_]
                     with codecs.open(os.path.join(exploded_dir, key), 'a', 'utf-8') as f:
                         f.write('\n'.join([tmp % a for a in list(product(*final_items))]) + '\n')
+
+
+    def create_index(self):
+        self.es.indices.create(index='opencricket', body=es_config.index_settings)
+        self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.mapping)
+
+    def load_index(self, exploded_dir):
+        with codecs.open(os.path.join(exploded_dir, 'player_stats'), 'r', 'utf-8') as f:
+            actions = [{
+                           "_index": "opencricket",
+                           "_type": "player_stats",
+                           "_source": {
+                               "question": line
+                           }} for line in f]
+            elasticsearch.helpers.bulk(self.es,actions, chunk_size=100000)
+        return json.dumps({'status': 'ok'})
+
+    def delete_index(self):
+        self.es.indices.delete(index='opencricket')
 
     def dedup_syntax_list(self, syntax_list):
         deduped_list = []
