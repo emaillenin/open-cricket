@@ -68,6 +68,9 @@ class Productions:
                         f.write('\n'.join([tmp % a for a in list(product(*final_items))]) + '\n')
 
 
+    def suggestions(self, search_string):
+        return self.es.search(index='opencricket', body=es_config.es_suggestion(search_string))
+
     def create_index(self):
         self.es.indices.create(index='opencricket', body=es_config.index_settings)
         self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.mapping)

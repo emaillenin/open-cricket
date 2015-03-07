@@ -37,6 +37,11 @@ def production():
     r.mimetype = 'application/json'
     return r
 
+
+@app.route("/suggestions")
+def suggestions():
+    return json_response(Productions().suggestions(request.args.get('search', '')))
+
 @app.route("/load_index")
 def load_index():
     r = make_response(Productions().load_index(config.exploded_dir))
@@ -58,7 +63,10 @@ def ping():
     return ok()
 
 def ok():
-    r = make_response(json.dumps({'status': 'ok'}))
+    return json_response({'status': 'ok'})
+
+def json_response(dict_response):
+    r = make_response(json.dumps(dict_response))
     r.mimetype = 'application/json'
     return r
 
