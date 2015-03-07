@@ -10,8 +10,8 @@ class TestSyntaxResponse(unittest.TestCase):
         self.response_string = '{"root": "compare", "compare": {"compare_word": "compare", "player_2": {"player": {"player1": "dhoni"}}, "CC": "and", "player_1": {"player": {"player1": "sehwag"}}}, "suggested": false}'
 
     def test_syntax_response_false_suggestion(self):
-        response_string = SyntaxResponse.build_response(self.syntax_string, False)
-        self.assertEqual(json.loads(self.response_string), json.loads(response_string))
+        response_dict = SyntaxResponse.build_response(self.syntax_string, False)
+        self.assertEqual(json.loads(self.response_string), response_dict)
 
 if __name__ == '__main__':
     unittest.main()
