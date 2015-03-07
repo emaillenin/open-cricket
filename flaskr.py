@@ -8,6 +8,7 @@ from flask import Flask, request, abort, make_response
 sys.path.append(os.path.dirname(__file__))
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.chart.syntax_response import SyntaxResponse
 from opencricket.suggestion.productions import Productions
 from opencricket.chart.player_names import PlayerNames
 
@@ -22,11 +23,11 @@ def search():
         parser = SentenceParser(user_search, player_names)
     except Exception as e:
         print(e.__doc__)
-        print(e.message)
+        print(str(e))
         abort(500)
     result = parser.parse_sentence()
     if result is not None:
-        return result
+        return SyntaxResponse.build_response(result, False)
     else:
         abort(422)
 
