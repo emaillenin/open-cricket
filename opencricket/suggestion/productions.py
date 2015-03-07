@@ -6,9 +6,7 @@ from itertools import product
 from collections import Counter
 from os.path import basename
 from opencricket.chart.sentence_parser import SentenceParser
-from _datetime import datetime
 import elasticsearch
-from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from opencricket.config import es_config
 EXPANSIONS = 'expansions'
@@ -18,8 +16,7 @@ SYNTAX = 'syntax'
 class Productions:
 
     def __init__(self, es_host = None):
-        if(es_host == None): es_host = '127.0.0.1'
-        self.es = Elasticsearch(hosts=es_host)
+        self.es = es_config.es_builder(es_host)
 
     def productions(self):
         # TODO While producing expansions, use Map Reduce instead of Iteration
@@ -39,7 +36,7 @@ class Productions:
                     syntax_expansions[key.__str__()] = list(stats_parser._leftcorner_words[key])
 
         result.append({root: {SYNTAX: root_productions, EXPANSIONS: syntax_expansions}})
-        return json.dumps(result)
+        return result
 
 
     def explode(self, expansions_dir, exploded_dir):
@@ -47,7 +44,7 @@ class Productions:
         for filename in glob.iglob(os.path.join(expansions_dir, '*.txt')):
             with codecs.open(filename, encoding='utf-8') as f:
                 reference_expansions[os.path.splitext(basename(f.name))[0]] = f.read().splitlines()
-        productions = json.loads(self.productions())
+        productions = self.productions()
         for production in productions:
             for key, syntax in production.items():
                 if (os.path.exists(os.path.join(exploded_dir, key))): os.remove(os.path.join(exploded_dir, key))
@@ -68,9 +65,6 @@ class Productions:
                         f.write('\n'.join([tmp % a for a in list(product(*final_items))]) + '\n')
 
 
-    def suggestions(self, search_string):
-        return self.es.search(index='opencricket', body=es_config.es_suggestion(search_string))
-
     def create_index(self):
         self.es.indices.create(index='opencricket', body=es_config.index_settings)
         self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.mapping)
@@ -81,10 +75,9 @@ class Productions:
                            "_index": "opencricket",
                            "_type": "player_stats",
                            "_source": {
-                               "question": line
+                               "question": line.strip()
                            }} for line in f]
             elasticsearch.helpers.bulk(self.es,actions, chunk_size=100000)
-        return json.dumps({'status': 'ok'})
 
     def delete_index(self):
         self.es.indices.delete(index='opencricket')

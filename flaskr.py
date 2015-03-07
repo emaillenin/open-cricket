@@ -1,15 +1,15 @@
 import sys
 import os
-import json
-from opencricket.config import config
-
-from flask import Flask, request, abort, make_response
 
 sys.path.append(os.path.dirname(__file__))
 
+import json
+from opencricket.config import config
+from flask import Flask, request, abort, make_response
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_response import SyntaxResponse
 from opencricket.suggestion.productions import Productions
+from opencricket.suggestion.suggestions import Suggestions
 from opencricket.chart.player_names import PlayerNames
 
 app = Flask(__name__)
@@ -17,8 +17,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def search():
+    user_search = request.args.get('search', '')
     try:
-        user_search = request.args.get('search', '')
         player_names = PlayerNames(config.metadata_dir + 'player_names.txt').get_player_names(user_search)
         parser = SentenceParser(user_search, player_names)
     except Exception as e:
@@ -27,26 +27,36 @@ def search():
         abort(500)
     result = parser.parse_sentence()
     if result is not None:
-        return SyntaxResponse.build_response(result, False)
+        return json_response(SyntaxResponse.build_response(result, False))
     else:
-        abort(422)
+        first_suggestion = Suggestions().first_suggestion(user_search)
+        if first_suggestion is not None:
+            parser = SentenceParser(first_suggestion, player_names)
+            did_you_mean = Suggestions().did_you_mean(user_search)
+            return json_response(SyntaxResponse.build_response(parser.parse_sentence(), True, first_suggestion, did_you_mean))
+        else:
+            did_you_mean = Suggestions().did_you_mean(user_search)
+            if did_you_mean is not None:
+                return json_response(SyntaxResponse.build_did_you_mean_response(did_you_mean))
+            else:
+                abort(422)
+
+@app.route("/related")
+def related():
+    return json_response(SyntaxResponse.build_related_search(Suggestions().related_search(request.args.get('search',''))))
 
 @app.route("/productions")
 def production():
-    r = make_response(Productions().productions())
-    r.mimetype = 'application/json'
-    return r
-
+    return json_response(Productions().productions())
 
 @app.route("/suggestions")
 def suggestions():
-    return json_response(Productions().suggestions(request.args.get('search', '')))
+    return json_response(Suggestions().suggestions(request.args.get('search', '')))
 
 @app.route("/load_index")
 def load_index():
-    r = make_response(Productions().load_index(config.exploded_dir))
-    r.mimetype = 'application/json'
-    return r
+    Productions().load_index(config.exploded_dir)
+    return ok()
 
 @app.route("/create_index")
 def create_index():

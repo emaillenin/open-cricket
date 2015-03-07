@@ -11,7 +11,7 @@ class SentenceParser:
 
         if not player_names:
             player_names = []
-        self.input = sentence
+        self.input = sentence.strip()
         title_case_pattern = re.compile('^[A-Z].*')
         title_case_words = [word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
             'default']
