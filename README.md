@@ -48,5 +48,6 @@ Contribute
 Setup your development machine:
 
  - install nltk & nltk data
- - sudo pip install Flask
- - python flaskr.py to start the server
+ - sudo pip3 install -r requirements.txt
+ - python3 flaskr.py to start the server
+ - Hit http://127.0.0.1:9001/?search=Sachin+Tendulkar+stats in your browser

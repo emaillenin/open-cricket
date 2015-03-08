@@ -22,8 +22,8 @@ def search():
         player_names = PlayerNames(config.metadata_dir + 'player_names.txt').get_player_names(user_search)
         parser = SentenceParser(user_search, player_names)
     except Exception as e:
-        print(e.__doc__)
-        print(str(e))
+        print(e.__doc__, file=sys.stderr)
+        print(str(e), file=sys.stderr)
         abort(500)
     result = parser.parse_sentence()
     if result is not None:
