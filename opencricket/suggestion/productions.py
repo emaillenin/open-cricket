@@ -1,5 +1,6 @@
 from subprocess import call
 import os
+import gc
 import glob
 import codecs
 from itertools import product
@@ -73,7 +74,7 @@ class Productions:
 
     def load_index(self, exploded_dir):
         for filename in glob.iglob(os.path.join(exploded_dir, '*')):
-            call("cd %s && split -b 50000000 %s %s" % (
+            call("cd %s && split -b 20000000 %s %s" % (
                 exploded_dir, os.path.splitext(basename(filename))[0], os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
             for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
                 print("Processing %s", split_file)
@@ -85,6 +86,7 @@ class Productions:
                                        "question": line.strip()
                                    }} for line in f]
                     elasticsearch.helpers.bulk(self.es, actions, chunk_size=200000)
+                gc.collect()
             call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
 
     def delete_index(self):

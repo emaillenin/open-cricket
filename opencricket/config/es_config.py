@@ -12,4 +12,4 @@ def es_fuzzy_match(search_string):
 
 def es_builder(hosts=None):
     if (hosts == None): hosts = '127.0.0.1'
-    return Elasticsearch(hosts=hosts)
+    return Elasticsearch(hosts=hosts, timeout=600, request_timeout=600)

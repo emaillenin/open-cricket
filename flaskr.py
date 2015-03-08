@@ -86,4 +86,4 @@ def json_response(dict_response):
     return r
 
 if __name__ == "__main__":
-    app.run('127.0.0.1', 9001, debug=True)
+    app.run('127.0.0.1', 9001)
