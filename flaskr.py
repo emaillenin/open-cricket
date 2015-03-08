@@ -27,19 +27,24 @@ def search():
         abort(500)
     result = parser.parse_sentence()
     if result is not None:
-        return json_response(SyntaxResponse.build_response(result, False))
+        all_suggestions = Suggestions().all_suggestions(user_search)
+        return json_response(SyntaxResponse.build_response(result, False,related_searches=all_suggestions))
     else:
         first_suggestion = Suggestions().first_suggestion(user_search)
         if first_suggestion is not None:
             parser = SentenceParser(first_suggestion, player_names)
             did_you_mean = Suggestions().did_you_mean(user_search)
-            return json_response(SyntaxResponse.build_response(parser.parse_sentence(), True, first_suggestion, did_you_mean))
+            return json_response(SyntaxResponse.build_response(parser.parse_sentence(), True, suggested_search=first_suggestion, did_you_mean=did_you_mean))
         else:
-            did_you_mean = Suggestions().did_you_mean(user_search)
-            if did_you_mean is not None:
-                return json_response(SyntaxResponse.build_did_you_mean_response(did_you_mean))
+            all_suggestions = Suggestions().all_suggestions(user_search)
+            if all_suggestions is not None:
+                return json_response(SyntaxResponse.build_related_search(all_suggestions))
             else:
-                abort(422)
+                did_you_mean = Suggestions().did_you_mean(user_search)
+                if did_you_mean is not None:
+                    return json_response(SyntaxResponse.build_did_you_mean_response(did_you_mean))
+                else:
+                    abort(422)
 
 @app.route("/related")
 def related():

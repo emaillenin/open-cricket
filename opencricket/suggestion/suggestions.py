@@ -11,8 +11,16 @@ class Suggestions:
     def first_suggestion(self, search_string):
         suggestions = self.suggestions(search_string)
         hits = suggestions['hits']['hits']
-        if len(hits) > 0:
+        if len(hits) > 1 and hits[0]['_score'] > hits[1]['_score']:
             return hits[0]['_source']['question']
+        else:
+            return None
+
+    def all_suggestions(self, search_string):
+        suggestions = self.suggestions(search_string)
+        hits = suggestions['hits']['hits']
+        if len(hits) > 0:
+            return [match['_source']['question'] for match in hits]
         else:
             return None
 
