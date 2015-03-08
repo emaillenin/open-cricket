@@ -1,4 +1,4 @@
-import json
+from subprocess import call
 import os
 import glob
 import codecs
@@ -9,13 +9,13 @@ from opencricket.chart.sentence_parser import SentenceParser
 import elasticsearch
 from elasticsearch import helpers
 from opencricket.config import es_config
+
 EXPANSIONS = 'expansions'
 SYNTAX = 'syntax'
 
 
 class Productions:
-
-    def __init__(self, es_host = None):
+    def __init__(self, es_host=None):
         self.es = es_config.es_builder(es_host)
 
     def productions(self):
@@ -47,7 +47,9 @@ class Productions:
         productions = self.productions()
         for production in productions:
             for key, syntax in production.items():
-                if (os.path.exists(os.path.join(exploded_dir, key))): os.remove(os.path.join(exploded_dir, key))
+                exploded_filename = key + '.explosion'
+                if (os.path.exists(os.path.join(exploded_dir, exploded_filename))): os.remove(
+                    os.path.join(exploded_dir, exploded_filename))
                 print(len(syntax[SYNTAX]))
                 syntax_list = self.dedup_syntax_list(syntax[SYNTAX])
                 print(len(syntax_list))
@@ -61,7 +63,7 @@ class Productions:
                     for word in s.split():
                         tmp = tmp.replace(word, '%s')
                     final_items = [reference_expansions[item] for item in items_]
-                    with codecs.open(os.path.join(exploded_dir, key), 'a', 'utf-8') as f:
+                    with codecs.open(os.path.join(exploded_dir, exploded_filename), 'a', 'utf-8') as f:
                         f.write('\n'.join([tmp % a for a in list(product(*final_items))]) + '\n')
 
 
@@ -70,14 +72,20 @@ class Productions:
         self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.mapping)
 
     def load_index(self, exploded_dir):
-        with codecs.open(os.path.join(exploded_dir, 'player_stats'), 'r', 'utf-8') as f:
-            actions = [{
-                           "_index": "opencricket",
-                           "_type": "player_stats",
-                           "_source": {
-                               "question": line.strip()
-                           }} for line in f]
-            elasticsearch.helpers.bulk(self.es,actions, chunk_size=100000)
+        for filename in glob.iglob(os.path.join(exploded_dir, '*')):
+            call("cd %s && split -b 50000000 %s %s" % (
+                exploded_dir, os.path.splitext(basename(filename))[0], os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
+            for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
+                print("Processing %s", split_file)
+                with codecs.open(split_file, 'r', 'utf-8') as f:
+                    actions = [{
+                                   "_index": "opencricket",
+                                   "_type": "player_stats",
+                                   "_source": {
+                                       "question": line.strip()
+                                   }} for line in f]
+                    elasticsearch.helpers.bulk(self.es, actions, chunk_size=200000)
+            call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
 
     def delete_index(self):
         self.es.indices.delete(index='opencricket')
