@@ -4,7 +4,7 @@ import os
 import json
 import re
 import itertools
-
+from opencricket.config import word_config
 
 class SentenceParser:
     def __init__(self, sentence, player_names=None):
@@ -13,8 +13,8 @@ class SentenceParser:
             player_names = []
         self.input = sentence.strip()
         title_case_pattern = re.compile('^[A-Z].*')
-        title_case_words = [word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
-            'default']
+        title_case_words = list(set([word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
+            'default']) - word_config.ignore_title_case_words)
 
         self.input = sentence.lower().replace('?',
                                               '')  # Converting the input to lower case so we can specify only lower case words in config

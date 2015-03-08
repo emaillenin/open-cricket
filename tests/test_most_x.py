@@ -10,7 +10,7 @@ class TestMostX(unittest.TestCase):
         self.input_sixes = 'who has the most sixes'
         self.expected_sixes = '{"most_x": {"most": "most", "who_player": {"who": "who"}, "metric": "sixes", "word_articles": "the", "word_has": "has"}}'
 
-        self.input_match_type = 'who has the most fours in odi'
+        self.input_match_type = 'who has the most fours in ODI'
         self.expected_match_type = '{"most_x": {"word_articles": "the", "word_has": "has", "word_in": "in", "match_type": "odi", "who_player": {"who": "who"}, "metric": "fours", "most": "most"}}'
 
         self.input_which_player = 'which player has the most sixes'
