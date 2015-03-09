@@ -59,11 +59,11 @@ def main():
                 sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
                 fpeople = []
                 with open(f, "r") as fdata:
-                    data = string.strip(fdata.read().replace('\n', ''))
+                    data = fdata.read().replace('\n', '').strip()
                     sents = sent_tokenizer.tokenize(data)
                     for s in sents:
                         chunks = nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(s)))
-                        people = [c for c in chunks if c.__class__.__name__ == 'Tree' and c.node == 'PERSON']
+                        people = [c for c in chunks if c.__class__.__name__ == 'Tree' and c.label() == 'PERSON']
                         if len(people) > 0:
                             for p in people:
                                 fpeople.append(' '.join([e[0] for e in p]))
