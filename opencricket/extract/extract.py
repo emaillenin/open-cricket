@@ -1,13 +1,12 @@
 #!/usr/bin/python
 import fnmatch
 
-import string
 import sys
+import codecs
 import os
 import nltk
 import collections
 import json
-from os.path import isfile, join
 
 
 def enrich_full_name(players):
@@ -58,7 +57,7 @@ def main():
                 f = os.path.join(root, fpath)
                 sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
                 fpeople = []
-                with open(f, "r") as fdata:
+                with codecs.open(f, "r",encoding='utf-8') as fdata:
                     data = fdata.read().replace('\n', '').strip()
                     sents = sent_tokenizer.tokenize(data)
                     for s in sents:
@@ -67,7 +66,7 @@ def main():
                         if len(people) > 0:
                             for p in people:
                                 fpeople.append(' '.join([e[0] for e in p]))
-                with open(os.path.join(impressions_input_dir, os.path.basename(f)), 'w') as fwrite:
+                with codecs.open(os.path.join(impressions_input_dir, os.path.basename(f)), 'w', encoding='utf-8') as fwrite:
                     fwrite.write(json.dumps((collections.Counter(enrich_full_name(fpeople)))))
                 print('Completed processing ' + f)
                 archive_file(root, os.path.basename(f), config['archive_dir'])
