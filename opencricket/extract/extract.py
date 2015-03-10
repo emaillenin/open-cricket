@@ -57,7 +57,7 @@ def main():
                 f = os.path.join(root, fpath)
                 sent_tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
                 fpeople = []
-                with codecs.open(f, "r",encoding='utf-8') as fdata:
+                with codecs.open(f, "r",encoding='utf-8',errors='ignore') as fdata:
                     data = fdata.read().replace('\n', '').strip()
                     sents = sent_tokenizer.tokenize(data)
                     for s in sents:
@@ -66,7 +66,7 @@ def main():
                         if len(people) > 0:
                             for p in people:
                                 fpeople.append(' '.join([e[0] for e in p]))
-                with codecs.open(os.path.join(impressions_input_dir, os.path.basename(f)), 'w', encoding='utf-8') as fwrite:
+                with codecs.open(os.path.join(impressions_input_dir, os.path.basename(f)), 'w', encoding='utf-8',errors='ignore') as fwrite:
                     fwrite.write(json.dumps((collections.Counter(enrich_full_name(fpeople)))))
                 print('Completed processing ' + f)
                 archive_file(root, os.path.basename(f), config['archive_dir'])
