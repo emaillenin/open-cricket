@@ -1,1 +1,1 @@
-ignore_title_case_words = {'odi'}
+ignore_title_case_words = {'odi', 't20', 'test', 't20i', 'ipl'}

@@ -24,6 +24,7 @@ class SentenceParser:
 
         self.NNP = self.join_for_config(title_case_words)
         self.player_names = self.join_for_config(title_case_words + player_names)
+        self.ground_names = self.join_for_config(list(set(title_case_words) - word_config.ignore_title_case_words))
         self.CD = '"0"'
 
         if not self.empty_pos(pos, 'NNP'):
@@ -88,7 +89,7 @@ class SentenceParser:
                     ground1 -> %s
                     ground2 -> %s
                     ground3 -> %s
-                    """ % (self.NNP, self.NNP, self.NNP),
+                    """ % (self.ground_names, self.ground_names, self.ground_names),
             'series': """
                     series -> series1 series2 series3
                     series -> series1 series2
