@@ -34,7 +34,7 @@ Apart from raw stats, you can also ask questions like
 How it works?
 =============
 
-Once a match gets over, Open Cricket starts retrieving the details of a match from cricket forums. Live matches are not supported yet.
+Open Cricket generates a structured JSON for each question. This JSON has to be parsed by a client that has the actual stats data. And the client needs to generate a SQL with this JSON that can fetch the appropriate data from the database.
 
 Why?
 ====
