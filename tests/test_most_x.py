@@ -28,6 +28,9 @@ class TestMostX(unittest.TestCase):
         self.input_year_match_type = 'who has the most runs in t20 in 2014'
         self.expected_year_match_type = '{"most_x": {"year": "2014", "metric": "runs", "word_in": "in", "match_type": "t20", "most": "most", "word_articles": "the", "word_has": "has", "who_player": {"who": "who"}}}'
 
+        self.input_team_player = 'which Indian player has the most runs in World Cup in Australia'
+        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": "runs", "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "most": "most", "word_articles": "the", "word_has": "has", "who_player": {"which_player": {"which": "which", "player": "player", "team_player": {"team_player1": "indian"}}}}}'
+
     def test_search_sixes(self):
         parser = SentenceParser(self.input_sixes)
         self.assertEqual(json.loads(self.expected_sixes), json.loads(parser.parse_sentence()))
@@ -55,6 +58,10 @@ class TestMostX(unittest.TestCase):
     def test_year_match_type(self):
         parser = SentenceParser(self.input_year_match_type)
         self.assertEqual(json.loads(self.expected_year_match_type), json.loads(parser.parse_sentence()))
+
+    def test_team_player(self):
+        parser = SentenceParser(self.input_team_player )
+        self.assertEqual(json.loads(self.expected_team_player), json.loads(parser.parse_sentence()))
 
 if __name__ == '__main__':
     unittest.main()

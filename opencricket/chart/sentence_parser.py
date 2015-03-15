@@ -36,13 +36,16 @@ class SentenceParser:
 
         filler_list = self.join_for_config(
             ['is', 'are', 'the', 'scores', 'score', 'for', 'by', 'of', 'in', 'has', 'at'])
+        team_names = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
+                 'ireland', 'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai',
+                 'super', 'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr',
+                 'sunrisers', 'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata',
+                 'knight', 'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand',
+                 'nz', 'south', 'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong',
+                 'kong']
         team_list = self.join_for_config(
-            ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya', 'ireland',
-             'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai', 'super',
-             'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr', 'sunrisers',
-             'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata', 'knight',
-             'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand', 'nz', 'south',
-             'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong', 'kong'])
+            team_names)
+        team_player_list = self.join_for_config(team_names + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan'])
         series_list = self.join_for_config(
             ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
              't20', 'trophy', 'icc', 'twenty20'])
@@ -73,6 +76,14 @@ class SentenceParser:
                     team1 -> """ + team_list + """
                     team2 -> """ + team_list + """
                     team3 -> """ + team_list + """
+                    """,
+            'team_player': """
+                    team_player -> team_player1 team_player2 team_player3
+                    team_player -> team_player1 team_player2
+                    team_player -> team_player1
+                    team_player1 -> """ + team_player_list + """
+                    team_player2 -> """ + team_player_list + """
+                    team_player3 -> """ + team_player_list + """
                     """,
             'player': """
                     player -> player1 player2 player3
@@ -218,10 +229,12 @@ class SentenceParser:
             who_player -> which_player
             who -> 'who'
             which_player -> which player
+            which_player -> which team_player player
             which -> 'which'
             player -> 'player'
             most -> 'most'
-            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_articles'], self.cfg_helpers['word_has']))
+            %s
+            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_articles'], self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
         )
 
         self.cfg_parsers.append(
