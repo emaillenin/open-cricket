@@ -44,7 +44,7 @@ class SentenceParser:
              'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand', 'nz', 'south',
              'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong', 'kong'])
         series_list = self.join_for_config(
-            ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 't20', 'world', 'cup', 'clt20',
+            ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
              't20', 'trophy', 'icc', 'twenty20'])
         metric_list = self.join_for_config(
             ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
@@ -284,8 +284,8 @@ class SentenceParser:
                               %s
                               %s
                               year -> %s
-                        """ % (self.cfg_helpers['series'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],self.cfg_helpers['word_year'],
-                               self.cfg_helpers['in_match_type'], self.cfg_helpers['ground'], self.CD)
+                        """ % (self.cfg_helpers['ground'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],self.cfg_helpers['word_year'],
+                               self.cfg_helpers['series'], self.cfg_helpers['in_match_type'], self.CD)
         return final_syntax
 
     @staticmethod

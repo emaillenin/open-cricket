@@ -19,7 +19,7 @@ class TestMostX(unittest.TestCase):
         self.input_ground = 'which player has the most sixes in Chennai'
         self.expected_ground = '{"most_x": {"word_articles": "the", "word_has": "has", "word_in": "in", "who_player": {"which_player": {"which": "which", "player": "player"}}, "most": "most", "metric": "sixes", "ground": {"ground1": "chennai"}}}'
 
-        self.input_series_year = 'which player has the most sixes in world cup in 2011'
+        self.input_series_year = 'which player has the most sixes in World Cup in 2011'
         self.expected_series_year = '{"most_x": {"metric": "sixes", "word_articles": "the", "word_has": "has", "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "most": "most", "year": "2011", "who_player": {"which_player": {"which": "which", "player": "player"}}}}'
 
         self.input_match_type_year = 'which player has the most runs in 2011 in test'
