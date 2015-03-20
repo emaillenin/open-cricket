@@ -45,13 +45,15 @@ class SentenceParser:
                  'kong']
         team_list = self.join_for_config(
             team_names)
-        team_player_list = self.join_for_config(team_names + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan'])
+        team_player_list = self.join_for_config(team_names + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan', 'pakistani'])
         series_list = self.join_for_config(
             ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
              't20', 'trophy', 'icc', 'twenty20'])
         metric_list = self.join_for_config(
-            ['fifties', 'sixes', 'fours', '100s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
-             'wickets'])
+            ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
+             'wickets', 'not', 'outs', 'high', 'individual', 'score', 'balls', 'faced', 'minutes', 'strike', 'rate',
+             'average', 'thirties', 'bowled', 'maiden', 'over','overs', 'conceded', 'best', 'bowling', 'figure',
+             'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten'])
         match_type_list = ['test', 'odi', 't20i', 't20']
 
         # TODO A dynamic generator for 'word' helpers
@@ -110,8 +112,13 @@ class SentenceParser:
                     series3 -> """ + series_list + """
                     """,
             'metric': """
-                    metric -> %s
-                    """ % metric_list,
+                    metric -> metric1 metric2 metric3
+                    metric -> metric1 metric2
+                    metric -> metric1
+                    metric1 -> """ + metric_list + """
+                    metric2 -> """ + metric_list + """
+                    metric3 -> """ + metric_list + """
+                    """,
             'in_match_type': """
                     match_type -> %s
                     """ % self.join_for_config(match_type_list),
@@ -232,7 +239,7 @@ class SentenceParser:
             which_player -> which team_player player
             which -> 'which'
             player -> 'player'
-            most -> 'most'
+            most -> 'most' | 'best' | 'highest'
             %s
             """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_articles'], self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
         )
