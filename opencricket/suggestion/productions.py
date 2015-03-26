@@ -60,10 +60,10 @@ class Productions:
                 for s in syntax_list:
                     # TODO Throw error if any word without word_ is not present in reference
                     tmp = s
-                    items_ = [word for word in s.split()]
+                    items_ = list(word for word in s.split())
                     for word in s.split():
                         tmp = tmp.replace(word, '%s')
-                    final_items = [reference_expansions[item] for item in items_]
+                    final_items = list(reference_expansions[item] for item in items_)
                     with codecs.open(os.path.join(exploded_dir, exploded_filename), 'a', 'utf-8') as f:
                         f.write('\n'.join([tmp % a for a in list(product(*final_items))]) + '\n')
 
@@ -81,12 +81,12 @@ class Productions:
             for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
                 print("Processing %s", split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
-                    actions = [{
+                    actions = list({
                                    "_index": "opencricket",
                                    "_type": "player_stats",
                                    "_source": {
                                        "question": line.strip()
-                                   }} for line in f]
+                                   }} for line in f)
                     elasticsearch.helpers.bulk(self.es, actions, chunk_size=200000)
                 gc.collect()
             call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
