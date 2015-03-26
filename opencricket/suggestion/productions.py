@@ -70,7 +70,7 @@ class Productions:
 
     def create_index(self):
         self.es.indices.create(index='opencricket', body=es_config.index_settings)
-        self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.mapping)
+        self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.type_mapping('player_stats'))
 
     def load_index(self, exploded_dir):
         for filename in glob.iglob(os.path.join(exploded_dir, '*')):
