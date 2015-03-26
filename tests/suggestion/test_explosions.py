@@ -3,6 +3,7 @@ import json
 
 from opencricket.suggestion.productions import Productions
 
+
 class TestExplosions(unittest.TestCase):
 
     def setUp(self):
@@ -14,6 +15,10 @@ class TestExplosions(unittest.TestCase):
 
         self.input_compare_in_match_type = 'compare Sehwag vs Dhoni in test'
         self.expected_compare_match_type = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "CC": "vs", "compare_word": "compare","word_in": "in", "match_type": "test"}}'
+
+    def test_productions(self):
+        productions = Productions().productions()
+        self.assertEqual(1, len(productions))
 
     def test_explosions(self):
         parser = Productions().explode('/Users/leninraj/projects/oc_data/expansions', '/Users/leninraj/projects/oc_data/exploded')

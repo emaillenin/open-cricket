@@ -20,7 +20,7 @@ class Productions:
         self.es = es_config.es_builder(es_host)
 
     def productions(self):
-        # TODO While producing expansions, use Map Reduce instead of Iteration
+        # TODO While producing expansions, do Map & Reduce instead of Iteration
         result = []
         parser = SentenceParser('')
         stats_parser = parser.cfg_parsers[4]
@@ -49,7 +49,7 @@ class Productions:
         for production in productions:
             for key, syntax in production.items():
                 exploded_filename = key + '.explosion'
-                if (os.path.exists(os.path.join(exploded_dir, exploded_filename))): os.remove(
+                if os.path.exists(os.path.join(exploded_dir, exploded_filename)): os.remove(
                     os.path.join(exploded_dir, exploded_filename))
                 print(len(syntax[SYNTAX]))
                 syntax_list = self.dedup_syntax_list(syntax[SYNTAX])
@@ -70,12 +70,14 @@ class Productions:
 
     def create_index(self):
         self.es.indices.create(index='opencricket', body=es_config.index_settings)
-        self.es.indices.put_mapping(index='opencricket', doc_type='player_stats', body=es_config.type_mapping('player_stats'))
+        self.es.indices.put_mapping(index='opencricket', doc_type='player_stats',
+                                    body=es_config.type_mapping('player_stats'))
 
     def load_index(self, exploded_dir):
         for filename in glob.iglob(os.path.join(exploded_dir, '*')):
             call("cd %s && split -b 20000000 %s %s" % (
-                exploded_dir, os.path.splitext(basename(filename))[0], os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
+                exploded_dir, os.path.splitext(basename(filename))[0],
+                os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
             for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
                 print("Processing %s", split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
