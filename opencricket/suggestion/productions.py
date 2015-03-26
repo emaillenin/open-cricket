@@ -36,7 +36,9 @@ class Productions:
                 if key.__str__().startswith('word_'):
                     syntax_expansions[key.__str__()] = list(stats_parser._leftcorner_words[key])
 
-        result.append({root: {SYNTAX: root_productions, EXPANSIONS: syntax_expansions}})
+        result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(root_productions),
+                                                             parser.expandable_filters() + ['word_this_last']),
+                              EXPANSIONS: syntax_expansions}})
         return result
 
 
@@ -51,9 +53,7 @@ class Productions:
                 exploded_filename = key + '.explosion'
                 if os.path.exists(os.path.join(exploded_dir, exploded_filename)): os.remove(
                     os.path.join(exploded_dir, exploded_filename))
-                print(len(syntax[SYNTAX]))
-                syntax_list = self.dedup_syntax_list(syntax[SYNTAX])
-                print(len(syntax_list))
+                syntax_list = syntax[SYNTAX]
                 static_expansions = syntax[EXPANSIONS]
                 for expansion_key, static_expansion in static_expansions.items():
                     reference_expansions[expansion_key] = static_expansion
@@ -82,11 +82,11 @@ class Productions:
                 print("Processing %s", split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
                     actions = list({
-                                   "_index": "opencricket",
-                                   "_type": "player_stats",
-                                   "_source": {
-                                       "question": line.strip()
-                                   }} for line in f)
+                                       "_index": "opencricket",
+                                       "_type": "player_stats",
+                                       "_source": {
+                                           "question": line.strip()
+                                       }} for line in f)
                     elasticsearch.helpers.bulk(self.es, actions, chunk_size=200000)
                 gc.collect()
             call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
@@ -98,8 +98,10 @@ class Productions:
         deduped_list = []
         for syntax in syntax_list:
             if not self.contains(deduped_list, syntax): deduped_list.append(syntax)
-        print(deduped_list)
         return deduped_list
+
+    def strip_permutation(self, syntax_list, possible_filters, upto=2):
+        return list(syntax for syntax in syntax_list if len(set(syntax.split()).intersection(possible_filters)) <= upto)
 
     def contains(self, syntax_list, syntax):
         for s in syntax_list:

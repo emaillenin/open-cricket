@@ -309,8 +309,11 @@ class SentenceParser:
         return final_syntax
 
     @staticmethod
-    def permutate_filters():
-        filters = ['match_type', 'series', 'year', 'ground']
+    def expandable_filters():
+        return ['match_type', 'series', 'year', 'ground']
+
+    def permutate_filters(self):
+        filters = self.expandable_filters()
         permutated_filters = []
         for i in range(1, len(filters) + 1):
             for f in itertools.permutations(filters, i):
