@@ -25,6 +25,7 @@ class TestMostX(unittest.TestCase):
         self.input_ground = 'which player has the most sixes in Chennai'
         self.expected_ground = '{"most_x": {"word_articles": "the", "word_has": "has", "word_in": "in", "who_player": {"which_player": {"which": "which", "player": "player"}}, "most": "most", "metric": {"metric1": "sixes" }, "ground": {"ground1": "chennai"}}}'
 
+        # Title case not to be detected as Ground
         self.input_series_year = 'which player has the most sixes in World Cup in 2011'
         self.expected_series_year = '{"most_x": {"metric": {"metric1": "sixes" }, "word_articles": "the", "word_has": "has", "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "most": "most", "year": "2011", "who_player": {"which_player": {"which": "which", "player": "player"}}}}'
 

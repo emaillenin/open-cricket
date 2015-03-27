@@ -65,7 +65,7 @@ class SentenceParser:
             'word_year': "word_year -> 'year'",
 
             'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
-            'cc': "CC -> 'and' | '&' | 'vs'",
+            'cc': "word_CC -> 'and' | '&' | 'vs'",
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
                     filler -> %s
@@ -140,18 +140,18 @@ class SentenceParser:
 
         self.cfg_parsers = []
 
-        base_syntax_matches = """matches -> select IN clause"""
+        base_syntax_matches = """matches -> word_select word_IN clause"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
                 %s
                 %s
-                clause -> teamA CC teamB
-                select -> 'matches' | 'match' | 'games' | 'game'
+                clause -> teamA word_CC teamB
+                word_select -> 'matches' | 'match' | 'games' | 'game'
                 teamA -> team
                 teamB -> team
                 %s
                 %s
-                IN -> 'between' | 'of'
+                word_IN -> 'between' | 'of'
                 """ % (base_syntax_matches, self.expand_with_filters(base_syntax_matches), self.cfg_helpers['team'],
                        self.cfg_helpers['cc'])))
 

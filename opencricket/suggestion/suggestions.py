@@ -34,6 +34,7 @@ class Suggestions:
 
     def did_you_mean(self, search_string):
         suggestions = self.suggestions(search_string)
+        if 'didYouMean' not in suggestions['suggest']: return None
         did_you_mean_options = suggestions['suggest']['didYouMean'][0]['options']
         if len(did_you_mean_options) > 0:
             return [dym['text'] for dym in did_you_mean_options]

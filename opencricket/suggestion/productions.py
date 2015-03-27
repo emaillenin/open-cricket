@@ -23,22 +23,22 @@ class Productions:
         # TODO While producing expansions, do Map & Reduce instead of Iteration
         result = []
         parser = SentenceParser('')
-        stats_parser = parser.cfg_parsers[4]
-        player_stats_productions = stats_parser.productions()
-        root = player_stats_productions[0].lhs()._symbol
-        root_productions = []
-        syntax_expansions = {}
-        for p in player_stats_productions:
-            syntax = p.__str__()
-            syntax_split = syntax.split(' -> ')
-            if syntax_split[0] == root: root_productions.append(syntax_split[1])
-            for key in stats_parser._leftcorner_words.keys():
-                if key.__str__().startswith('word_'):
-                    syntax_expansions[key.__str__()] = list(stats_parser._leftcorner_words[key])
+        for stats_parser in parser.cfg_parsers:
+            player_stats_productions = stats_parser.productions()
+            root = player_stats_productions[0].lhs()._symbol
+            root_productions = []
+            syntax_expansions = {}
+            for p in player_stats_productions:
+                syntax = p.__str__()
+                syntax_split = syntax.split(' -> ')
+                if syntax_split[0] == root: root_productions.append(syntax_split[1])
+                for key in stats_parser._leftcorner_words.keys():
+                    if key.__str__().startswith('word_'):
+                        syntax_expansions[key.__str__()] = list(stats_parser._leftcorner_words[key])
 
-        result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(root_productions),
-                                                             parser.expandable_filters() + ['word_this_last']),
-                              EXPANSIONS: syntax_expansions}})
+            result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(root_productions),
+                                                                 parser.expandable_filters() + ['word_this_last']),
+                                  EXPANSIONS: syntax_expansions}})
         return result
 
 

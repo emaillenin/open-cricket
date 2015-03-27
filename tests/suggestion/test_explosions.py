@@ -20,6 +20,10 @@ class TestExplosions(unittest.TestCase):
         productions = Productions().productions()
         self.assertEqual(1, len(productions))
 
+        # self.assertEqual(15, len(productions[0]['player_stats']['syntax']))
+        # self.assertEqual(True, 'player word_stats word_in match_type word_in series' in productions[0]['player_stats'][
+        #     'syntax'])
+
     def test_explosions(self):
         parser = Productions().explode('/Users/leninraj/projects/oc_data/expansions', '/Users/leninraj/projects/oc_data/exploded')
 
