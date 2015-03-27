@@ -36,16 +36,10 @@ class SentenceParser:
 
         filler_list = self.join_for_config(
             ['is', 'are', 'the', 'scores', 'score', 'for', 'by', 'of', 'in', 'has', 'at'])
-        team_names = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
-                 'ireland', 'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai',
-                 'super', 'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr',
-                 'sunrisers', 'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata',
-                 'knight', 'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand',
-                 'nz', 'south', 'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong',
-                 'kong']
-        team_list = self.join_for_config(
-            team_names)
-        team_player_list = self.join_for_config(team_names + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan', 'pakistani'])
+
+        team_list = self.join_for_config(self.split_and_form_list(self.team_names_list()))
+        team_player_list = self.join_for_config(self.split_and_form_list(self.team_player_list()))
+
         series_list = self.join_for_config(
             ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
              't20', 'trophy', 'icc', 'twenty20'])
@@ -290,6 +284,10 @@ class SentenceParser:
     def words_from_pos(pos, tag):
         return '"' + '" | "'.join([p[0] for p in pos if p[1] == tag]) + '"'
 
+    @staticmethod
+    def split_and_form_list(source):
+        return list(set(s.split() for s in source))
+
     def expand_with_filters(self, base_syntax):
         final_syntax = ''
         for f in self.permutate_filters():
@@ -311,6 +309,20 @@ class SentenceParser:
     @staticmethod
     def expandable_filters():
         return ['match_type', 'series', 'year', 'ground']
+
+    @staticmethod
+    def team_names_list():
+        return ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
+                 'ireland', 'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai',
+                 'super', 'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr',
+                 'sunrisers', 'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata',
+                 'knight', 'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand',
+                 'nz', 'south', 'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong',
+                 'kong']
+
+    @staticmethod
+    def team_player_list():
+        return SentenceParser.team_names_list() + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan', 'pakistani']
 
     def permutate_filters(self):
         filters = self.expandable_filters()
