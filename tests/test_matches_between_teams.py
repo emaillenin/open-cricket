@@ -7,13 +7,13 @@ class TestMatchesBetweenTeams(unittest.TestCase):
 
     def setUp(self):
         self.input = 'matches between india and england'
-        self.expected = '{"matches": {"clause": {"CC": "and", "teamA": {"team": {"team1": "india"}}, "teamB": {"team": {"team1": "england"}}}, "select": "matches", "IN": "between"}}'
+        self.expected = '{"matches": {"clause": {"word_and": "and", "team_A": {"team": {"team1": "india"}}, "team_B": {"team": {"team1": "england"}}}, "word_select": "matches", "word_between": "between"}}'
 
         self.input_series_year = 'matches between india and england in world cup in 2011'
-        self.expected_series_year = '{"matches": {"clause": {"CC": "and", "teamA": {"team": {"team1": "india"}}, "teamB": {"team": {"team1": "england"}}}, "select": "matches", "IN": "between","word_in": "in", "year": "2011", "series": {"series1": "world", "series2": "cup"}}}'
+        self.expected_series_year = '{"matches": {"clause": {"word_and": "and", "team_A": {"team": {"team1": "india"}}, "team_B": {"team": {"team1": "england"}}}, "word_select": "matches", "word_between": "between","word_in": "in", "year": "2011", "series": {"series1": "world", "series2": "cup"}}}'
         
         self.input_year_match_type = 'matches between india and england in 2011 in test'
-        self.expected_year_match_type = '{"matches": {"clause": {"CC": "and", "teamA": {"team": {"team1": "india"}}, "teamB": {"team": {"team1": "england"}}}, "select": "matches", "IN": "between", "year": "2011", "match_type" : "test", "word_in": "in"}}'
+        self.expected_year_match_type = '{"matches": {"clause": {"word_and": "and", "team_A": {"team": {"team1": "india"}}, "team_B": {"team": {"team1": "england"}}}, "word_select": "matches", "word_between": "between", "year": "2011", "match_type" : "test", "word_in": "in"}}'
 
     def test_search(self):
         parser = SentenceParser(self.input)

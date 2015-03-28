@@ -6,6 +6,9 @@ import re
 import itertools
 from opencricket.config import word_config
 
+from nltk.parse import generate
+from nltk.grammar import Nonterminal
+
 class SentenceParser:
     def __init__(self, sentence, player_names=None):
 
@@ -59,7 +62,7 @@ class SentenceParser:
             'word_year': "word_year -> 'year'",
 
             'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
-            'cc': "word_CC -> 'and' | '&' | 'vs'",
+            'word_and': "word_and -> 'and'",
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
                     filler -> %s
@@ -134,20 +137,20 @@ class SentenceParser:
 
         self.cfg_parsers = []
 
-        base_syntax_matches = """matches -> word_select word_IN clause"""
+        base_syntax_matches = """matches -> word_select word_between clause"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
                 %s
                 %s
-                clause -> teamA word_CC teamB
-                word_select -> 'matches' | 'match' | 'games' | 'game'
-                teamA -> team
-                teamB -> team
+                clause -> team_A word_and team_B
+                word_select -> 'matches'
+                team_A -> team
+                team_B -> team
                 %s
                 %s
-                word_IN -> 'between' | 'of'
+                word_between -> 'between'
                 """ % (base_syntax_matches, self.expand_with_filters(base_syntax_matches), self.cfg_helpers['team'],
-                       self.cfg_helpers['cc'])))
+                       self.cfg_helpers['word_and'])))
 
         self.cfg_parsers.append(nltk.CFG.fromstring("""
              scores -> question filler extent filler team
@@ -249,7 +252,7 @@ class SentenceParser:
         """ % (self.cfg_helpers['filler'], self.cfg_helpers['team'], self.cfg_helpers['dismissals']))
         )
 
-        base_syntax_compare = 'compare -> compare_word player_1 CC player_2'
+        base_syntax_compare = 'compare -> compare_word player_1 word_and player_2'
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
@@ -260,7 +263,7 @@ class SentenceParser:
             %s
             %s
         """ % (base_syntax_compare, self.expand_with_filters(base_syntax_compare), self.cfg_helpers['player'],
-               self.cfg_helpers['cc']))
+               self.cfg_helpers['word_and']))
         )
 
 
@@ -286,7 +289,7 @@ class SentenceParser:
 
     @staticmethod
     def split_and_form_list(source):
-        return list(set(s.split() for s in source))
+        return list(set(sum([s.split() for s in source], [])))
 
     def expand_with_filters(self, base_syntax):
         final_syntax = ''
@@ -313,12 +316,11 @@ class SentenceParser:
     @staticmethod
     def team_names_list():
         return ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
-                 'ireland', 'netherlands', 'netherland', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai',
-                 'super', 'kings', 'csk', 'royal', 'challengers', 'bangalore', 'rcb', 'rajastan', 'royals', 'rr',
-                 'sunrisers', 'hyderabad', 'srh', 'mumbai', 'indians', 'mi', 'kings', 'xi', 'punjab', 'kxip', 'kolkata',
-                 'knight', 'riders', 'kkr', 'pune', 'warriors', 'pwi', 'delhi', 'daredevils', 'dd', 'new', 'zealand',
-                 'nz', 'south', 'africa', 'sa', 'sri', 'lanka', 'sl', 'west', 'indies', 'wi', 'uae', 'east', 'hong',
-                 'kong']
+                 'ireland', 'netherlands', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai super kings',
+                 'csk', 'royal challengers bangalore', 'rcb', 'rajastan royals', 'rr', 'sunrisers hyderabad', 'srh',
+                 'mumbai indians', 'mi', 'kings xi punjab', 'kxip', 'kolkata knight riders', 'kkr', 'pune warriors',
+                 'pwi', 'delhi daredevils', 'dd', 'new zealand', 'nz', 'south africa', 'sa', 'sri lanka', 'sl', 'west indies',
+                 'wi', 'uae', 'east africa', 'hong kong']
 
     @staticmethod
     def team_player_list():

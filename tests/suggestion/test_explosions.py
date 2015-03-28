@@ -17,7 +17,7 @@ class TestExplosions(unittest.TestCase):
         self.expected_compare_match_type = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "CC": "vs", "compare_word": "compare","word_in": "in", "match_type": "test"}}'
 
     def test_productions(self):
-        productions = Productions().productions()
+        productions = Productions().productions('/Users/leninraj/projects/oc_data/expansions')
         self.assertEqual(1, len(productions))
 
         # self.assertEqual(15, len(productions[0]['player_stats']['syntax']))

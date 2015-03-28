@@ -52,7 +52,7 @@ def related():
 
 @app.route("/productions")
 def production():
-    return json_response(Productions().productions())
+    return json_response(Productions().productions(config.expansions_dir))
 
 @app.route("/suggestions")
 def suggestions():
