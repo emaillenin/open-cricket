@@ -61,7 +61,7 @@ class SentenceParser:
             'word_this_last': "word_this_last -> 'this' | 'last'",
             'word_year': "word_year -> 'year'",
 
-            'extent': "extent -> 'highest' | 'lowest' | 'high' | 'low'",
+            'word_extent': "word_extent -> 'highest' | 'lowest' | 'recent'",
             'word_and': "word_and -> 'and'",
             'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
@@ -152,41 +152,39 @@ class SentenceParser:
                 """ % (base_syntax_matches, self.expand_with_filters(base_syntax_matches), self.cfg_helpers['team'],
                        self.cfg_helpers['word_and'])))
 
+        base_syntax_scores_team = "scores -> what_is_the word_extent word_score word_of team"
+        base_syntax_scores_player = "scores -> what_is_the word_extent word_score word_of player"
         self.cfg_parsers.append(nltk.CFG.fromstring("""
-             scores -> question filler extent filler team
-             scores -> extent filler team
-             scores -> extent class filler team
-             scores -> player period filler
-             period -> 'recent' | 'best' | 'highest'
              %s
              %s
-             question -> 'what'
              %s
-             class -> 'ODI' | 'test'
-             filler -> filler1 filler2
-             filler1 -> filler
-             filler2 -> filler
              %s
-             IN -> 'between' | 'of'
-         """ % (
-            self.cfg_helpers['player'], self.cfg_helpers['team'], self.cfg_helpers['extent'],
-            self.cfg_helpers['filler'])))
+             what_is_the -> word_what word_is word_the
+             word_what -> 'what'
+             word_is -> 'is'
+             word_the -> 'the'
+             word_of -> 'of'
+             word_score -> 'score'
+             %s
+             %s
+             %s
+         """ % (base_syntax_scores_team, base_syntax_scores_player, self.expand_with_filters(base_syntax_scores_team), self.expand_with_filters(base_syntax_scores_player),
+            self.cfg_helpers['player'], self.cfg_helpers['team'], self.cfg_helpers['word_extent'])))
 
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-            partnerships -> extent select
-            partnerships -> select extent
-            partnerships -> extent select filler wkt_order wicket
-            partnerships -> extent select filler wkt_order wicket filler team
-            partnerships -> extent select filler team
-            partnerships -> extent select filler team filler wkt_order wicket
+            partnerships -> word_extent select
+            partnerships -> word_extent select filler wkt_order wicket
+            partnerships -> word_extent select filler wkt_order wicket filler team
+            partnerships -> word_extent select filler team
+            partnerships -> word_extent select filler team filler wkt_order wicket
             select -> 'partnership' |  'partnerships'
             %s
             %s
             %s
             %s
             wicket -> 'wicket'
-        """ % (self.cfg_helpers['extent'], self.cfg_helpers['filler'], self.cfg_helpers['wkt_order'],
+        """ % (self.cfg_helpers['word_extent'], self.cfg_helpers['filler'], self.cfg_helpers['wkt_order'],
                self.cfg_helpers['team'])))
 
         base_syntax_matches_cond = 'matches_cond -> what team chased_s score'

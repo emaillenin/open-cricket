@@ -28,7 +28,7 @@ class Productions:
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         # for stats_parser in parser.cfg_parsers:
-        stats_parser = parser.cfg_parsers[0]
+        stats_parser = parser.cfg_parsers[1]
         root = str(stats_parser.start())
         player_stats_productions = stats_parser.productions(lhs=Nonterminal(root))
         root_productions = []
@@ -99,7 +99,7 @@ class Productions:
                 exploded_dir, os.path.splitext(basename(filename))[0],
                 os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
             for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
-                print("Processing %s", split_file)
+                print("Processing %s" % split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
                     actions = list({
                                        "_index": "opencricket",

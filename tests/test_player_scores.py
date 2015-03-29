@@ -6,11 +6,11 @@ from opencricket.chart.sentence_parser import SentenceParser
 class TestPlayerScores(unittest.TestCase):
 
     def setUp(self):
-        self.input_recent = 'Suresh Raina recent scores'
-        self.expected_recent = '{"scores": {"period": "recent", "filler": "scores", "player": {"player1": "suresh","player2": "raina"}}}'
+        self.input_recent = 'what is the recent score of Suresh Raina'
+        self.expected_recent = '{"scores": {"what_is_the": {"word_the": "the", "word_is": "is", "word_what": "what"}, "word_score": "score", "word_extent": "recent", "player": {"player2": "raina", "player1": "suresh"}, "word_of": "of"}}'
 
-        self.input_highest = 'Suresh Raina highest scores'
-        self.expected_highest = '{"scores": {"period": "highest", "filler": "scores", "player": {"player1": "suresh","player2": "raina"}}}'
+        self.input_highest = 'what is the highest score of Suresh Raina in t20 in 2015'
+        self.expected_highest = '{"scores": {"what_is_the": {"word_the": "the", "word_is": "is", "word_what": "what"}, "word_score": "score", "word_extent": "highest", "player": {"player2": "raina", "player1": "suresh"}, "match_type": "t20", "word_in": "in", "word_of": "of", "year": "2015"}}'
 
     def test_search_recent(self):
         parser = SentenceParser(self.input_recent)
