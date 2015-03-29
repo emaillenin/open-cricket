@@ -30,14 +30,14 @@ class Productions:
         # for stats_parser in parser.cfg_parsers:
         stats_parser = parser.cfg_parsers[1]
         root = str(stats_parser.start())
-        player_stats_productions = stats_parser.productions(lhs=Nonterminal(root))
-        root_productions = []
+        root_productions = stats_parser.productions(lhs=Nonterminal(root))
+        result_productions = []
         syntax_expansions = {}
         dynamic_expansions = {}
-        for p in player_stats_productions:
+        for p in root_productions:
             syntax = str(p)
             syntax_split = syntax.split(' -> ')
-            root_productions.append(syntax_split[1])
+            result_productions.append(syntax_split[1])
         for key in stats_parser._leftcorner_words.keys():
             if str(key).startswith('word_'):
                 syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])
@@ -48,7 +48,7 @@ class Productions:
                 continue
             for p in stats_parser.productions(lhs=s):
                 dynamic_expansions[str(s).split(' -> ')[0]] = ' '.join(map(str, p.rhs()))
-        result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(root_productions),
+        result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(result_productions),
                                                              parser.expandable_filters() + ['word_this_last']),
                               EXPANSIONS: syntax_expansions,
                               DYNAMIC_EXPANSIONS: dynamic_expansions
@@ -89,21 +89,27 @@ class Productions:
     def create_index(self):
         self.es.indices.create(index='opencricket', body=es_config.index_settings)
         parser = SentenceParser('')
-        for root in list(map(str, (p.start() for p in parser.cfg_parsers))):
-            self.es.indices.put_mapping(index='opencricket', doc_type=root,
-                                        body=es_config.type_mapping(root))
+        for doc_type in list(map(str, (p.start() for p in parser.cfg_parsers))):
+            self.put_mapping(doc_type)
+
+    def put_mapping(self, doc_type):
+        self.es.indices.put_mapping(index='opencricket', doc_type=doc_type,
+                                        body=es_config.type_mapping(doc_type))
 
     def load_index(self, exploded_dir):
         for filename in glob.iglob(os.path.join(exploded_dir, '*')):
+            doc_type = os.path.splitext(basename(filename))[0]
+            self.put_mapping(doc_type)
+            call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
             call("cd %s && split -b 20000000 %s %s" % (
-                exploded_dir, os.path.splitext(basename(filename))[0],
-                os.path.splitext(basename(filename))[0] + '_oc_split'), shell=True)
+                exploded_dir, doc_type,
+                doc_type + '_oc_split'), shell=True)
             for split_file in glob.iglob(os.path.join(exploded_dir, '*_oc_split*')):
                 print("Processing %s" % split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
                     actions = list({
                                        "_index": "opencricket",
-                                       "_type": "player_stats",
+                                       "_type": doc_type,
                                        "_source": {
                                            "question": line.strip()
                                        }} for line in f)

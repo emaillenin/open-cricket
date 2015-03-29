@@ -68,6 +68,11 @@ def create_index():
     Productions().create_index()
     return ok()
 
+@app.route("/put_mapping")
+def put_mapping():
+    Productions().put_mapping(request.args.get('doc_type', 'player_stats'))
+    return ok()
+
 @app.route("/delete_index")
 def delete_index():
     Productions().delete_index()
