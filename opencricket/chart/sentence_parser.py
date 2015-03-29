@@ -63,7 +63,7 @@ class SentenceParser:
 
             'word_extent': "word_extent -> 'highest' | 'lowest' | 'recent'",
             'word_and': "word_and -> 'and'",
-            'wkt_order': "wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
+            'word_wkt_order': "word_wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
             'filler': """
                     filler -> %s
                     """ % filler_list,
@@ -171,20 +171,33 @@ class SentenceParser:
          """ % (base_syntax_scores_team, base_syntax_scores_player, self.expand_with_filters(base_syntax_scores_team), self.expand_with_filters(base_syntax_scores_player),
             self.cfg_helpers['player'], self.cfg_helpers['team'], self.cfg_helpers['word_extent'])))
 
+        base_syntax_part1 = 'partnerships -> word_extent word_partnership'
+        base_syntax_part2 = 'partnerships -> word_extent word_partnership word_for word_wkt_order word_wicket'
+        base_syntax_part3 = 'partnerships -> word_extent word_partnership word_for team'
+        base_syntax_part4 = 'partnerships -> word_extent word_partnership word_for word_wkt_order word_wicket word_for team'
+        base_syntax_part5 = 'partnerships -> word_extent word_partnership word_for team word_for word_wkt_order word_wicket'
+
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-            partnerships -> word_extent select
-            partnerships -> word_extent select filler wkt_order wicket
-            partnerships -> word_extent select filler wkt_order wicket filler team
-            partnerships -> word_extent select filler team
-            partnerships -> word_extent select filler team filler wkt_order wicket
-            select -> 'partnership' |  'partnerships'
             %s
             %s
             %s
             %s
-            wicket -> 'wicket'
-        """ % (self.cfg_helpers['word_extent'], self.cfg_helpers['filler'], self.cfg_helpers['wkt_order'],
+            %s
+            %s
+            %s
+            %s
+            %s
+            %s
+            word_partnership -> 'partnership'
+            %s
+            %s
+            %s
+            word_for -> 'for'
+            word_wicket -> 'wicket'
+        """ % (base_syntax_part1, base_syntax_part2, base_syntax_part3, base_syntax_part4, base_syntax_part5,
+               self.expand_with_filters(base_syntax_part1),self.expand_with_filters(base_syntax_part2),self.expand_with_filters(base_syntax_part3),self.expand_with_filters(base_syntax_part4),self.expand_with_filters(base_syntax_part5),
+               self.cfg_helpers['word_extent'], self.cfg_helpers['word_wkt_order'],
                self.cfg_helpers['team'])))
 
         base_syntax_matches_cond = 'matches_cond -> what team chased_s score'

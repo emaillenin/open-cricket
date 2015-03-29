@@ -12,7 +12,7 @@ who_player -> which team player
 who -> 'who'
 which -> 'which'
 player -> 'player'
-team -> 'indian' | 'australian' | 'england' | 'sri lankan'
+team -> 'indian' | 'australian' | 'england' | 'sri' 'lankan'
 has -> 'has'
 the -> 'the'
 this -> 'this'
@@ -23,7 +23,7 @@ runs -> 'runs'
 print(list((n,sent) for n, sent in enumerate(generate.generate(cfg, n=100, start=Nonterminal('root')), 1)))
 
 result1 = nltk.ChartParser(cfg).parse('which england player has the most runs'.split())
-result2 = nltk.ChartParser(cfg).parse(['which', 'sri lankan', 'player', 'has', 'the', 'most',  'runs'])
+result2 = nltk.ChartParser(cfg).parse(['which', 'sri', 'lankan', 'player', 'has', 'the', 'most',  'runs'])
 print(list(result1))
 print(list(result2))
 
