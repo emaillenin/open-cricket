@@ -6,11 +6,11 @@ from opencricket.chart.sentence_parser import SentenceParser
 
 class TestTeamChases(unittest.TestCase):
     def setUp(self):
-        self.input = 'when was the last time india chased down 300+'
-        self.expected = '{"matches_cond": {"chased_s": {"down": "down", "chased": "chased"}, "what": {"last_time": {"was": "was", "the": "the", "when": "when", "last": "last", "time": "time"}}, "score": "300+", "team": {"team1": "india"}}}'
+        self.input = 'when was the last time india chased 300+'
+        self.expected = '{"matches_cond": {"word_chased": "chased", "last_time": {"word_was": "was", "word_the": "the", "word_when": "when", "word_last": "last", "word_time": "time"}, "target": "300+", "team": {"team1": "india"}}}'
 
-        self.input_ground = 'how many times india chased down 300+ in Chennai'
-        self.expected_ground = '{"matches_cond": {"word_in": "in", "team": {"team1": "india"}, "what": {"how_many_times": {"times": "times", "how": "how", "many": "many"}}, "ground": {"ground1": "chennai"}, "chased_s": {"down": "down", "chased": "chased"}, "score": "300+"}}'
+        self.input_ground = 'how many times india chased 300+ in Chennai'
+        self.expected_ground = '{"matches_cond": {"team": {"team1": "india"}, "word_in": "in", "how_many_times": {"word_times": "times", "word_how": "how", "word_many": "many"}, "ground": {"ground1": "chennai"}, "word_chased": "chased", "target": "300+"}}'
 
     def test_search(self):
         parser = SentenceParser(self.input)

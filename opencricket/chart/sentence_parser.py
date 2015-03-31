@@ -129,9 +129,9 @@ class SentenceParser:
                     """,
             'how_many_times': """
                     how_many_times -> word_how word_many word_times
-                    word_how -> 'word_how'
-                    word_many -> 'word_many'
-                    word_times -> 'word_times'
+                    word_how -> 'how'
+                    word_many -> 'many'
+                    word_times -> 'times'
                     """
         }
 
