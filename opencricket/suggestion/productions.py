@@ -3,7 +3,7 @@ import os
 import gc
 import glob
 import codecs
-from itertools import product
+from itertools import product, chain
 from collections import Counter
 from os.path import basename
 from opencricket.chart.sentence_parser import SentenceParser
@@ -11,6 +11,7 @@ import elasticsearch
 from elasticsearch import helpers
 from opencricket.config import es_config
 from nltk.grammar import Nonterminal
+from collections import defaultdict
 
 EXPANSIONS = 'expansions'
 DYNAMIC_EXPANSIONS = 'dynamic_expansions'
@@ -33,7 +34,7 @@ class Productions:
         root_productions = stats_parser.productions(lhs=Nonterminal(root))
         result_productions = []
         syntax_expansions = {}
-        dynamic_expansions = {}
+        dynamic_expansions = defaultdict(list)
         for p in root_productions:
             syntax = str(p)
             syntax_split = syntax.split(' -> ')
@@ -47,7 +48,7 @@ class Productions:
                     key.startswith(f) for f in expansion_files):
                 continue
             for p in stats_parser.productions(lhs=s):
-                dynamic_expansions[str(s).split(' -> ')[0]] = ' '.join(map(str, p.rhs()))
+                dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, p.rhs())))
         result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(result_productions),
                                                              parser.expandable_filters() + ['word_this_last']),
                               EXPANSIONS: syntax_expansions,
@@ -72,12 +73,15 @@ class Productions:
                 dynamic_expansions = syntax[DYNAMIC_EXPANSIONS]
                 for expansion_key, static_expansion in static_expansions.items():
                     reference_expansions[expansion_key] = [static_expansion]
-                for expansion_key, dynamic_expansion in dynamic_expansions.items():
-                    tmp = ' '.join(['%s'] * len(dynamic_expansion.split()))
-                    final_items = list(
-                        reference_expansions[item if item.startswith('word_') else item.split('_')[0]] for item in
-                        dynamic_expansion.split())
-                    reference_expansions[expansion_key] = list(tmp % a for a in list(product(*final_items)))
+                for expansion_key, dynamic_expansion_list in dynamic_expansions.items():
+                    reference_expansions[expansion_key] = []
+                    for dynamic_expansion in dynamic_expansion_list:
+                        tmp = ' '.join(['%s'] * len(dynamic_expansion.split()))
+                        final_items = list(
+                            reference_expansions[item if item.startswith('word_') else item.split('_')[0]] for item in
+                            dynamic_expansion.split())
+                        reference_expansions[expansion_key].append(list(tmp % a for a in list(product(*final_items))))
+                    reference_expansions[expansion_key] = list(chain(*reference_expansions[expansion_key]))
                 for s in syntax_list:
                     # TODO Throw error if any word without word_ is not present in reference
                     tmp = ' '.join(['%s'] * len(s.split()))

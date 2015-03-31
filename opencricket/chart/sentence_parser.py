@@ -232,7 +232,7 @@ class SentenceParser:
                 self.cfg_helpers['player']))
         )
 
-        base_syntax_most_x = """most_x -> who_player word_has word_articles most metric"""
+        base_syntax_most_x = """most_x -> who_player word_has word_the word_most metric"""
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
@@ -240,16 +240,15 @@ class SentenceParser:
             %s
             %s
             %s
-            who_player -> who
-            who_player -> which_player
-            who -> 'who'
-            which_player -> which player
-            which_player -> which team_player player
-            which -> 'which'
-            player -> 'player'
-            most -> 'most' | 'best' | 'highest'
-            %s
-            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_articles'], self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
+            who_player -> word_who
+            who_player -> word_which word_player
+            who_player -> word_which team_player word_player
+            word_who -> 'who'
+            word_which -> 'which'
+            word_player -> 'player'
+            word_most -> 'highest' | 'most' | 'best'
+            word_the -> 'the'
+            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
         )
 
         self.cfg_parsers.append(
