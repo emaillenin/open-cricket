@@ -28,7 +28,7 @@ class Productions:
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         # for stats_parser in parser.cfg_parsers:
-        stats_parser = parser.cfg_parsers[2]
+        stats_parser = parser.cfg_parsers[3]
         root = str(stats_parser.start())
         root_productions = stats_parser.productions(lhs=Nonterminal(root))
         result_productions = []
@@ -40,7 +40,7 @@ class Productions:
             result_productions.append(syntax_split[1])
         for key in stats_parser._leftcorner_words.keys():
             if str(key).startswith('word_'):
-                syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])
+                syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])[0]
         for s in stats_parser._lhs_index:
             key = str(s).split(' -> ')[0]
             if key == root or any(char.isdigit() for char in key) or key.startswith('word_') or any(
@@ -71,7 +71,7 @@ class Productions:
                 static_expansions = syntax[EXPANSIONS]
                 dynamic_expansions = syntax[DYNAMIC_EXPANSIONS]
                 for expansion_key, static_expansion in static_expansions.items():
-                    reference_expansions[expansion_key] = static_expansion
+                    reference_expansions[expansion_key] = [static_expansion]
                 for expansion_key, dynamic_expansion in dynamic_expansions.items():
                     tmp = ' '.join(['%s'] * len(dynamic_expansion.split()))
                     final_items = list(

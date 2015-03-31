@@ -120,18 +120,18 @@ class SentenceParser:
                     match_type -> %s
                     """ % self.join_for_config(match_type_list),
             'last_time': """
-                    last_time -> when was the last time
-                    when -> 'when'
-                    was -> 'was'
-                    the -> 'the'
-                    last -> 'last'
-                    time -> 'time'
+                    last_time -> word_when word_was word_the word_last word_time
+                    word_when -> 'when'
+                    word_was -> 'was'
+                    word_the -> 'the'
+                    word_last -> 'last'
+                    word_time -> 'time'
                     """,
             'how_many_times': """
-                    how_many_times -> how many times
-                    how -> 'how'
-                    many -> 'many'
-                    times -> 'times'
+                    how_many_times -> word_how word_many word_times
+                    word_how -> 'word_how'
+                    word_many -> 'word_many'
+                    word_times -> 'word_times'
                     """
         }
 
@@ -200,22 +200,22 @@ class SentenceParser:
                self.cfg_helpers['word_extent'], self.cfg_helpers['word_wkt_order'],
                self.cfg_helpers['team'])))
 
-        base_syntax_matches_cond = 'matches_cond -> what team chased_s score'
+        base_syntax_matches_cond_last_time = 'matches_cond -> last_time team word_chased target'
+        base_syntax_matches_cond_how_many_times = 'matches_cond -> how_many_times team word_chased target'
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
                 %s
                 %s
-                what -> last_time
-                what -> how_many_times
                 %s
                 %s
                 %s
-                chased_s -> chased
-                chased_s -> chased down
-                chased -> 'chased' | 'chase'
-                down -> 'down'
-                score -> %s
-            """ % (base_syntax_matches_cond, self.expand_with_filters(base_syntax_matches_cond),
+                %s
+                %s
+                word_chased -> 'chased'
+                target -> %s
+            """ % (base_syntax_matches_cond_last_time, base_syntax_matches_cond_how_many_times,
+                   self.expand_with_filters(base_syntax_matches_cond_how_many_times),
+                   self.expand_with_filters(base_syntax_matches_cond_last_time),
                    self.cfg_helpers['last_time'], self.cfg_helpers['how_many_times'], self.cfg_helpers['team'],
                    self.CD))
         )
