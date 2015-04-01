@@ -9,6 +9,7 @@ from opencricket.config import word_config
 from nltk.parse import generate
 from nltk.grammar import Nonterminal
 
+
 class SentenceParser:
     def __init__(self, sentence, player_names=None):
 
@@ -16,8 +17,9 @@ class SentenceParser:
             player_names = []
         self.input = sentence.strip()
         title_case_pattern = re.compile('^[A-Z].*')
-        title_case_words = list(set([word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
-            'default']) - word_config.ignore_title_case_words)
+        title_case_words = list(
+            set([word.lower() for word in self.input.split(' ') if title_case_pattern.match(word)] + [
+                'default']) - word_config.ignore_title_case_words)
 
         self.input = sentence.lower().replace('?',
                                               '')  # Converting the input to lower case so we can specify only lower case words in config
@@ -49,7 +51,7 @@ class SentenceParser:
         metric_list = self.join_for_config(
             ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
              'wickets', 'not', 'outs', 'high', 'individual', 'score', 'balls', 'faced', 'minutes', 'strike', 'rate',
-             'average', 'thirties', 'bowled', 'maiden', 'over','overs', 'conceded', 'best', 'bowling', 'figure',
+             'average', 'thirties', 'bowled', 'maiden', 'over', 'overs', 'conceded', 'best', 'bowling', 'figure',
              'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten'])
         match_type_list = ['test', 'odi', 't20i', 't20']
 
@@ -168,8 +170,9 @@ class SentenceParser:
              %s
              %s
              %s
-         """ % (base_syntax_scores_team, base_syntax_scores_player, self.expand_with_filters(base_syntax_scores_team), self.expand_with_filters(base_syntax_scores_player),
-            self.cfg_helpers['player'], self.cfg_helpers['team'], self.cfg_helpers['word_extent'])))
+         """ % (base_syntax_scores_team, base_syntax_scores_player, self.expand_with_filters(base_syntax_scores_team),
+                self.expand_with_filters(base_syntax_scores_player),
+                self.cfg_helpers['player'], self.cfg_helpers['team'], self.cfg_helpers['word_extent'])))
 
         base_syntax_part1 = 'partnerships -> word_extent word_partnership'
         base_syntax_part2 = 'partnerships -> word_extent word_partnership word_for word_wkt_order word_wicket'
@@ -196,7 +199,9 @@ class SentenceParser:
             word_for -> 'for'
             word_wicket -> 'wicket'
         """ % (base_syntax_part1, base_syntax_part2, base_syntax_part3, base_syntax_part4, base_syntax_part5,
-               self.expand_with_filters(base_syntax_part1),self.expand_with_filters(base_syntax_part2),self.expand_with_filters(base_syntax_part3),self.expand_with_filters(base_syntax_part4),self.expand_with_filters(base_syntax_part5),
+               self.expand_with_filters(base_syntax_part1), self.expand_with_filters(base_syntax_part2),
+               self.expand_with_filters(base_syntax_part3), self.expand_with_filters(base_syntax_part4),
+               self.expand_with_filters(base_syntax_part5),
                self.cfg_helpers['word_extent'], self.cfg_helpers['word_wkt_order'],
                self.cfg_helpers['team'])))
 
@@ -248,18 +253,28 @@ class SentenceParser:
             word_player -> 'player'
             word_most -> 'highest' | 'most' | 'best'
             word_the -> 'the'
-            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'], self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
+            """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'],
+                   self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
         )
+
+        base_syntax_dismissals_with_team = 'player_dismissals -> word_dismissals word_by dismissals word_in team'
+        base_syntax_dismissals = 'player_dismissals -> word_dismissals word_by dismissals'
 
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
-            player_dismissals -> what filler dismissals filler team
-            player_dismissals -> what filler dismissals
-            what -> 'dismissals'
             %s
             %s
             %s
-        """ % (self.cfg_helpers['filler'], self.cfg_helpers['team'], self.cfg_helpers['dismissals']))
+            %s
+            word_dismissals -> 'dismissals'
+            %s
+            %s
+            word_in -> 'in'
+            word_by -> 'by'
+        """ % (base_syntax_dismissals_with_team, base_syntax_dismissals,
+               self.expand_with_filters(base_syntax_dismissals_with_team),
+               self.expand_with_filters(base_syntax_dismissals), self.cfg_helpers['team'],
+               self.cfg_helpers['dismissals']))
         )
 
         base_syntax_compare = 'compare -> compare_word player_1 word_and player_2'
@@ -315,8 +330,10 @@ class SentenceParser:
                               %s
                               %s
                               year -> %s
-                        """ % (self.cfg_helpers['ground'], self.cfg_helpers['word_this_last'],self.cfg_helpers['word_in'],self.cfg_helpers['word_year'],
-                               self.cfg_helpers['series'], self.cfg_helpers['in_match_type'], self.CD)
+                        """ % (
+            self.cfg_helpers['ground'], self.cfg_helpers['word_this_last'], self.cfg_helpers['word_in'],
+            self.cfg_helpers['word_year'],
+            self.cfg_helpers['series'], self.cfg_helpers['in_match_type'], self.CD)
         return final_syntax
 
     @staticmethod
@@ -326,15 +343,17 @@ class SentenceParser:
     @staticmethod
     def team_names_list():
         return ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
-                 'ireland', 'netherlands', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai super kings',
-                 'csk', 'royal challengers bangalore', 'rcb', 'rajastan royals', 'rr', 'sunrisers hyderabad', 'srh',
-                 'mumbai indians', 'mi', 'kings xi punjab', 'kxip', 'kolkata knight riders', 'kkr', 'pune warriors',
-                 'pwi', 'delhi daredevils', 'dd', 'new zealand', 'nz', 'south africa', 'sa', 'sri lanka', 'sl', 'west indies',
-                 'wi', 'uae', 'east africa', 'hong kong']
+                'ireland', 'netherlands', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai super kings',
+                'csk', 'royal challengers bangalore', 'rcb', 'rajastan royals', 'rr', 'sunrisers hyderabad', 'srh',
+                'mumbai indians', 'mi', 'kings xi punjab', 'kxip', 'kolkata knight riders', 'kkr', 'pune warriors',
+                'pwi', 'delhi daredevils', 'dd', 'new zealand', 'nz', 'south africa', 'sa', 'sri lanka', 'sl',
+                'west indies',
+                'wi', 'uae', 'east africa', 'hong kong']
 
     @staticmethod
     def team_player_list():
-        return SentenceParser.team_names_list() + ['indian', 'australian', 'kenyan', 'canadian','namibian', 'african', 'lankan', 'pakistani']
+        return SentenceParser.team_names_list() + ['indian', 'australian', 'kenyan', 'canadian', 'namibian', 'african',
+                                                   'lankan', 'pakistani']
 
     def permutate_filters(self):
         filters = self.expandable_filters()

@@ -29,7 +29,7 @@ class Productions:
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         # for stats_parser in parser.cfg_parsers:
-        stats_parser = parser.cfg_parsers[3]
+        stats_parser = parser.cfg_parsers[6]
         root = str(stats_parser.start())
         root_productions = stats_parser.productions(lhs=Nonterminal(root))
         result_productions = []
