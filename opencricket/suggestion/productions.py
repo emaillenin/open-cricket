@@ -29,7 +29,7 @@ class Productions:
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         # for stats_parser in parser.cfg_parsers:
-        stats_parser = parser.cfg_parsers[6]
+        stats_parser = parser.cfg_parsers[7]
         root = str(stats_parser.start())
         root_productions = stats_parser.productions(lhs=Nonterminal(root))
         result_productions = []
@@ -83,7 +83,6 @@ class Productions:
                         reference_expansions[expansion_key].append(list(tmp % a for a in list(product(*final_items))))
                     reference_expansions[expansion_key] = list(chain(*reference_expansions[expansion_key]))
                 for s in syntax_list:
-                    # TODO Throw error if any word without word_ is not present in reference
                     tmp = ' '.join(['%s'] * len(s.split()))
                     final_items = list(reference_expansions[item] for item in s.split())
                     with codecs.open(os.path.join(exploded_dir, exploded_filename), 'a', 'utf-8') as f:

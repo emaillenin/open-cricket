@@ -7,13 +7,13 @@ class TestComparePlayers(unittest.TestCase):
 
     def setUp(self):
         self.input = 'compare sehwag and dhoni'
-        self.expected = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "word_and": "and", "compare_word": "compare"}}'
-
+        self.expected = '{"compare": {"word_compare": "compare", "clause_player": {"elite-player_1": {"player": {"player1": "sehwag"}}, "word_and": "and", "elite-player_2": {"player": {"player1": "dhoni"}}}}}'
+        
         self.input_compare_year = 'compare Sehwag and Dhoni in 2011'
-        self.expected_compare_year = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "word_and": "and", "compare_word": "compare", "word_in": "in","year": "2011"}}'
+        self.expected_compare_year = '{"compare": {"word_compare": "compare", "clause_player": {"elite-player_1": {"player": {"player1": "sehwag"}}, "word_and": "and", "elite-player_2": {"player": {"player1": "dhoni"}}}, "word_in": "in","year": "2011"}}'
 
         self.input_compare_in_match_type = 'compare Sehwag and Dhoni in test'
-        self.expected_compare_match_type = '{"compare": {"player_1": {"player": {"player1": "sehwag"}}, "player_2": {"player": {"player1": "dhoni"}}, "word_and": "and", "compare_word": "compare","word_in": "in", "match_type": "test"}}'
+        self.expected_compare_match_type = '{"compare": {"word_compare": "compare", "clause_player": {"elite-player_1": {"player": {"player1": "sehwag"}}, "word_and": "and", "elite-player_2": {"player": {"player1": "dhoni"}}}, "word_in": "in","match_type": "test"}}'
 
     def test_search(self):
         parser = SentenceParser(self.input, ['dhoni', 'sehwag'])

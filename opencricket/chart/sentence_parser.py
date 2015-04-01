@@ -39,9 +39,6 @@ class SentenceParser:
         if not self.empty_pos(pos, 'CD'):
             self.CD = self.join_for_config(self.extract_words_with_tag(pos, 'CD'))
 
-        filler_list = self.join_for_config(
-            ['is', 'are', 'the', 'scores', 'score', 'for', 'by', 'of', 'in', 'has', 'at'])
-
         team_list = self.join_for_config(self.split_and_form_list(self.team_names_list()))
         team_player_list = self.join_for_config(self.split_and_form_list(self.team_player_list()))
 
@@ -66,9 +63,6 @@ class SentenceParser:
             'word_extent': "word_extent -> 'highest' | 'lowest' | 'recent'",
             'word_and': "word_and -> 'and'",
             'word_wkt_order': "word_wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
-            'filler': """
-                    filler -> %s
-                    """ % filler_list,
             'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
             'team': """
                     team -> team1 team2 team3
@@ -277,14 +271,15 @@ class SentenceParser:
                self.cfg_helpers['dismissals']))
         )
 
-        base_syntax_compare = 'compare -> compare_word player_1 word_and player_2'
+        base_syntax_compare = 'compare -> word_compare clause_player'
         self.cfg_parsers.append(
             nltk.CFG.fromstring("""
             %s
             %s
-            player_1 -> player
-            player_2 -> player
-            compare_word -> 'compare'
+            clause_player -> elite-player_1 word_and elite-player_2
+            elite-player_1 -> player
+            elite-player_2 -> player
+            word_compare -> 'compare'
             %s
             %s
         """ % (base_syntax_compare, self.expand_with_filters(base_syntax_compare), self.cfg_helpers['player'],
