@@ -13,6 +13,8 @@ from opencricket.config import es_config
 from nltk.grammar import Nonterminal
 from collections import defaultdict
 
+OPEN_CRICKET_INDEX = 'opencricket'
+
 EXPANSIONS = 'expansions'
 DYNAMIC_EXPANSIONS = 'dynamic_expansions'
 SYNTAX = 'syntax'
@@ -89,18 +91,23 @@ class Productions:
 
 
     def create_index(self):
-        self.es.indices.create(index='opencricket', body=es_config.index_settings)
+        self.es.indices.create(index=OPEN_CRICKET_INDEX, body=es_config.index_settings)
         parser = SentenceParser('')
         for doc_type in list(map(str, (p.start() for p in parser.cfg_parsers))):
             self.put_mapping(doc_type)
 
     def put_mapping(self, doc_type):
-        self.es.indices.put_mapping(index='opencricket', doc_type=doc_type,
+        self.es.indices.put_mapping(index=OPEN_CRICKET_INDEX, doc_type=doc_type,
                                         body=es_config.type_mapping(doc_type))
+
+    def delete_documents(self, doc_type):
+        self.es.delete_by_query(index=OPEN_CRICKET_INDEX, doc_type=doc_type,
+                                        body=es_config.delete_documents)
 
     def load_index(self, exploded_dir):
         for filename in glob.iglob(os.path.join(exploded_dir, '*')):
             doc_type = os.path.splitext(basename(filename))[0]
+            self.delete_documents(doc_type)
             self.put_mapping(doc_type)
             call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
             call("cd %s && split -b 20000000 %s %s" % (
@@ -110,7 +117,7 @@ class Productions:
                 print("Processing %s" % split_file)
                 with codecs.open(split_file, 'r', 'utf-8') as f:
                     actions = list({
-                                       "_index": "opencricket",
+                                       "_index": OPEN_CRICKET_INDEX,
                                        "_type": doc_type,
                                        "_source": {
                                            "question": line.strip()
@@ -120,7 +127,7 @@ class Productions:
             call("cd %s && rm *_oc_split*" % exploded_dir, shell=True)
 
     def delete_index(self):
-        self.es.indices.delete(index='opencricket')
+        self.es.indices.delete(index=OPEN_CRICKET_INDEX)
 
     def dedup_syntax_list(self, syntax_list):
         deduped_list = []
