@@ -72,10 +72,10 @@ class SentenceParser:
                     team2 -> """ + team_list + """
                     team3 -> """ + team_list + """
                     """,
-            'team_player': """
-                    team_player -> team_player1 team_player2 team_player3
-                    team_player -> team_player1 team_player2
-                    team_player -> team_player1
+            'teamplayer': """
+                    teamplayer -> team_player1 team_player2 team_player3
+                    teamplayer -> team_player1 team_player2
+                    teamplayer -> team_player1
                     team_player1 -> """ + team_player_list + """
                     team_player2 -> """ + team_player_list + """
                     team_player3 -> """ + team_player_list + """
@@ -241,14 +241,14 @@ class SentenceParser:
             %s
             who_player -> word_who
             who_player -> word_which word_player
-            who_player -> word_which team_player word_player
+            who_player -> word_which teamplayer word_player
             word_who -> 'who'
             word_which -> 'which'
             word_player -> 'player'
             word_most -> 'highest' | 'most' | 'best'
             word_the -> 'the'
             """ % (base_syntax_most_x, self.expand_with_filters(base_syntax_most_x), self.cfg_helpers['metric'],
-                   self.cfg_helpers['word_has'], self.cfg_helpers['team_player']))
+                   self.cfg_helpers['word_has'], self.cfg_helpers['teamplayer']))
         )
 
         base_syntax_dismissals_with_team = 'player_dismissals -> word_dismissals word_by dismissals word_in team'

@@ -28,32 +28,31 @@ class Productions:
         parser = SentenceParser('')
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
-        # for stats_parser in parser.cfg_parsers:
-        stats_parser = parser.cfg_parsers[7]
-        root = str(stats_parser.start())
-        root_productions = stats_parser.productions(lhs=Nonterminal(root))
-        result_productions = []
-        syntax_expansions = {}
-        dynamic_expansions = defaultdict(list)
-        for p in root_productions:
-            syntax = str(p)
-            syntax_split = syntax.split(' -> ')
-            result_productions.append(syntax_split[1])
-        for key in stats_parser._leftcorner_words.keys():
-            if str(key).startswith('word_'):
-                syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])[0]
-        for s in stats_parser._lhs_index:
-            key = str(s).split(' -> ')[0]
-            if key == root or any(char.isdigit() for char in key) or key.startswith('word_') or any(
-                    key.startswith(f) for f in expansion_files):
-                continue
-            for p in stats_parser.productions(lhs=s):
-                dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, p.rhs())))
-        result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(result_productions),
-                                                             parser.expandable_filters() + ['word_this_last']),
-                              EXPANSIONS: syntax_expansions,
-                              DYNAMIC_EXPANSIONS: dynamic_expansions
-                              }})
+        for stats_parser in parser.cfg_parsers:
+            root = str(stats_parser.start())
+            root_productions = stats_parser.productions(lhs=Nonterminal(root))
+            result_productions = []
+            syntax_expansions = {}
+            dynamic_expansions = defaultdict(list)
+            for p in root_productions:
+                syntax = str(p)
+                syntax_split = syntax.split(' -> ')
+                result_productions.append(syntax_split[1])
+            for key in stats_parser._leftcorner_words.keys():
+                if str(key).startswith('word_'):
+                    syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])[0]
+            for s in stats_parser._lhs_index:
+                key = str(s).split(' -> ')[0]
+                if key == root or any(char.isdigit() for char in key) or key.startswith('word_') or any(
+                        key.startswith(f) for f in expansion_files):
+                    continue
+                for p in stats_parser.productions(lhs=s):
+                    dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, p.rhs())))
+            result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(result_productions),
+                                                                 parser.expandable_filters() + ['word_this_last']),
+                                  EXPANSIONS: syntax_expansions,
+                                  DYNAMIC_EXPANSIONS: dynamic_expansions
+                                  }})
         return result
 
 
