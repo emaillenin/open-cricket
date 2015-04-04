@@ -36,7 +36,7 @@ class TestMostX(unittest.TestCase):
         self.expected_year_match_type = '{"most_x": {"year": "2014", "metric": {"metric1": "runs" }, "word_in": "in", "match_type": "t20", "word_most": "most", "word_the": "the", "word_has": "has", "who_player": {"word_who": "who"}}}'
 
         self.input_team_player = 'which Indian player has the most runs in World Cup in Australia'
-        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "team_player": {"team_player1": "indian"}}}}'
+        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": {"team_player1": "indian"}}}}'
 
     def test_search_sixes(self):
         parser = SentenceParser(self.input_sixes)
