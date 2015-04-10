@@ -53,6 +53,8 @@ class SentenceParser:
             ground3 -> %s
             """ % (self.ground_names, self.ground_names, self.ground_names)
 
+        word_config.cfg_helpers['nlp_number'] = self.CD
+
         self.cfg_parsers = []
 
         base_syntax_scores_team = "scores -> what_is_the word_extent word_score word_of team"
@@ -77,7 +79,7 @@ class SentenceParser:
                 syntax_expansions.expand_with_filters(base_syntax_scores_player),
                 word_config.cfg_helpers['player'], word_config.cfg_helpers['team'],
                 word_config.cfg_helpers['word_extent'],
-                syntax_expansions.definition_for_expansion_filters(self.CD))))
+                syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']))))
 
         base_syntax_part1 = 'partnerships -> word_extent word_partnership'
         base_syntax_part2 = 'partnerships -> word_extent word_partnership word_for word_wkt_order word_wicket'
@@ -110,7 +112,7 @@ class SentenceParser:
                syntax_expansions.expand_with_filters(base_syntax_part3),
                syntax_expansions.expand_with_filters(base_syntax_part4),
                syntax_expansions.expand_with_filters(base_syntax_part5),
-               syntax_expansions.definition_for_expansion_filters(self.CD),
+               syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                word_config.cfg_helpers['word_extent'], word_config.cfg_helpers['word_wkt_order'],
                word_config.cfg_helpers['team'])))
 
@@ -131,9 +133,9 @@ class SentenceParser:
             """ % (base_syntax_matches_cond_last_time, base_syntax_matches_cond_how_many_times,
                    syntax_expansions.expand_with_filters(base_syntax_matches_cond_how_many_times),
                    syntax_expansions.expand_with_filters(base_syntax_matches_cond_last_time),
-                   syntax_expansions.definition_for_expansion_filters(self.CD),
+                   syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                    word_config.cfg_helpers['last_time'], word_config.cfg_helpers['how_many_times'], word_config.cfg_helpers['team'],
-                   self.CD))
+                   word_config.cfg_helpers['nlp_number']))
         )
 
         base_syntax_player_stats = """player_stats -> player word_stats"""
@@ -147,7 +149,7 @@ class SentenceParser:
             """ % (
                 base_syntax_player_stats,
                 syntax_expansions.expand_with_filters(base_syntax_player_stats),
-                syntax_expansions.definition_for_expansion_filters(self.CD),
+                syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                 word_config.cfg_helpers['player']))
         )
 
@@ -170,7 +172,7 @@ class SentenceParser:
             word_the -> 'the'
             """ % (base_syntax_most_x,
                    syntax_expansions.expand_with_filters(base_syntax_most_x),
-                   syntax_expansions.definition_for_expansion_filters(self.CD),
+                   syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                    word_config.cfg_helpers['metric'],
                    word_config.cfg_helpers['word_has'], word_config.cfg_helpers['teamplayer']))
         )
@@ -193,7 +195,7 @@ class SentenceParser:
         """ % (base_syntax_dismissals_with_team, base_syntax_dismissals,
                syntax_expansions.expand_with_filters(base_syntax_dismissals_with_team),
                syntax_expansions.expand_with_filters(base_syntax_dismissals),
-               syntax_expansions.definition_for_expansion_filters(self.CD),
+               syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                word_config.cfg_helpers['team'],
                word_config.cfg_helpers['dismissals']))
         )
@@ -211,7 +213,7 @@ class SentenceParser:
             %s
             %s
         """ % (base_syntax_compare, syntax_expansions.expand_with_filters(base_syntax_compare),
-               syntax_expansions.definition_for_expansion_filters(self.CD),
+               syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                word_config.cfg_helpers['player'],
                word_config.cfg_helpers['word_and']))
         )
@@ -229,7 +231,7 @@ class SentenceParser:
                 %s
                 %s
                 """ % (base_syntax_matches, syntax_expansions.expand_with_filters(base_syntax_matches),
-                       syntax_expansions.definition_for_expansion_filters(self.CD),
+                       syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
                        self.expand_with_matches_clauses(base_syntax_matches),
                        word_config.cfg_helpers['team'],
                        word_config.cfg_helpers['word_and'])))
@@ -274,7 +276,7 @@ class SentenceParser:
             word_config.cfg_helpers['word_between'],
             word_config.cfg_helpers['word_lost'],
             word_config.cfg_helpers['word_by'],
-            self.CD)
+            word_config.cfg_helpers['nlp_number'])
 
         return final_syntax
 
@@ -286,7 +288,8 @@ class SentenceParser:
         logging.info("Input search: %s", self.input)
         for cfg in self.cfg_parsers:
             result = self.parse_input(cfg)
-            if result is not None: return result
+            if result is not None:
+                return result
 
         logging.error("Unable to find result for : %s", self.input)
         return None
