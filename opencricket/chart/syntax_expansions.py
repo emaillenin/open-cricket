@@ -10,6 +10,35 @@ def expand_with_filters(base_syntax):
                         """ % (base_syntax, ' '.join(f))
     return final_syntax
 
+
+def expand_with_matches_clauses(base_syntax):
+    final_syntax = ''
+    for f in permutate_filters(word_config.expandable_match_clauses + word_config.expandable_filters_in):
+        final_syntax += """
+                            %s %s
+                        """ % (base_syntax, ' '.join(f))
+    final_syntax += """
+                          %s
+                          %s
+                          %s
+                          %s
+                          %s
+                          %s
+                          wickets -> %s
+                    """ % (
+        build_syntax_with_expandable_filters('clause_result_by_team', word_config.match_clauses['clause_result_by_team']),
+        build_syntax_with_expandable_filters('clause_between', word_config.match_clauses['clause_between']),
+        # word_config.match_clauses['clause_batting_order'],
+        # word_config.match_clauses['clause_innings_score'], word_config.match_clauses['clause_chasing_score'],
+        # word_config.match_clauses['clause_wickets_left'],
+        word_config.cfg_helpers['word_won'],
+        word_config.cfg_helpers['word_between'],
+        word_config.cfg_helpers['word_lost'],
+        word_config.cfg_helpers['word_by'],
+        word_config.cfg_helpers['nlp_number'])
+
+    return final_syntax
+
 def definition_for_expansion_filters(year):
     return """
                           %s

@@ -107,3 +107,10 @@ cfg_helpers = {
             word_times -> 'times'
             """
 }
+
+
+def empty_pos(pos, tag):
+    return len([p[0] for p in pos if p[1] == tag]) == 0
+
+def extract_words_with_tag(pos, tag):
+    return [p[0] for p in pos if p[1] == tag]
