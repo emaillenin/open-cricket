@@ -14,7 +14,7 @@ def syntax():
         word_compare -> 'compare'
         %s
         %s
-    """ % (base_syntax_compare, syntax_expansions.expand_with_filters(base_syntax_compare),
-           syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
-           word_config.cfg_helpers['player'],
-           word_config.cfg_helpers['word_and'])
+        """ % (base_syntax_compare, syntax_expansions.expand_with_filters(base_syntax_compare),
+               syntax_expansions.definition_for_expansion_filters('nlp_number'),
+               'nlp_player',
+               word_config.cfg_helpers['word_and'])

@@ -13,5 +13,5 @@ def syntax():
         """ % (
         base_syntax_player_stats,
         syntax_expansions.expand_with_filters(base_syntax_player_stats),
-        syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
-        word_config.cfg_helpers['player'])
+        syntax_expansions.definition_for_expansion_filters('nlp_number'),
+        'nlp_player')

@@ -3,12 +3,15 @@ import logging
 import os
 import json
 import re
+import datetime
 from opencricket.config import word_config
+from opencricket.services.redis_service import RedisService
+from opencricket.chart import syntax_expansions
 
 
 class SentenceParser:
     def __init__(self, sentence, player_names=None):
-
+        redis_service = RedisService()
         if not player_names:
             player_names = []
         self.input = sentence.strip()
@@ -35,7 +38,7 @@ class SentenceParser:
         if not word_config.empty_pos(pos, 'CD'):
             self.CD = word_config.join_for_config(word_config.extract_words_with_tag(pos, 'CD'))
 
-        word_config.cfg_helpers['player'] = """
+        word_config.cfg_helpers['nlp_player'] = """
             player -> player1 player2 player3
             player -> player1 player2
             player -> player1
@@ -43,7 +46,7 @@ class SentenceParser:
             player2 -> %s
             player3 -> %s
             """ % (self.player_names, self.player_names, self.player_names)
-        word_config.cfg_helpers['ground'] = """
+        word_config.cfg_helpers['nlp_ground'] = """
             ground -> ground1 ground2 ground3
             ground -> ground1 ground2
             ground -> ground1
@@ -55,6 +58,10 @@ class SentenceParser:
         word_config.cfg_helpers['nlp_number'] = self.CD
 
         self.cfg_parsers = []
+        for key in redis_service.get_syntax_list():
+            self.cfg_parsers.append(nltk.CFG.fromstring(
+                syntax_expansions.replace_nlp_placeholders(redis_service.get_syntax(key))
+            ))
 
     def parse_sentence(self):
         logging.basicConfig(

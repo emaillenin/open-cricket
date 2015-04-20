@@ -2,3 +2,4 @@ nltk
 numpy
 flask
 elasticsearch
+redis

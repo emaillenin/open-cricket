@@ -16,9 +16,9 @@ def syntax():
         %s
         word_in -> 'in'
         word_by -> 'by'
-    """ % (base_syntax_dismissals_with_team, base_syntax_dismissals,
-           syntax_expansions.expand_with_filters(base_syntax_dismissals_with_team),
-           syntax_expansions.expand_with_filters(base_syntax_dismissals),
-           syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
-           word_config.cfg_helpers['team'],
-           word_config.cfg_helpers['dismissals'])
+        """ % (base_syntax_dismissals_with_team, base_syntax_dismissals,
+               syntax_expansions.expand_with_filters(base_syntax_dismissals_with_team),
+               syntax_expansions.expand_with_filters(base_syntax_dismissals),
+               syntax_expansions.definition_for_expansion_filters('nlp_number'),
+               word_config.cfg_helpers['team'],
+               word_config.cfg_helpers['dismissals'])

@@ -21,6 +21,6 @@ def syntax():
         word_the -> 'the'
         """ % (base_syntax_most_x,
                syntax_expansions.expand_with_filters(base_syntax_most_x),
-               syntax_expansions.definition_for_expansion_filters(word_config.cfg_helpers['nlp_number']),
+               syntax_expansions.definition_for_expansion_filters('nlp_number'),
                word_config.cfg_helpers['metric'],
                word_config.cfg_helpers['word_has'], word_config.cfg_helpers['teamplayer'])
