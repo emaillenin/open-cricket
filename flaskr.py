@@ -1,5 +1,6 @@
 import sys
 import os
+from opencricket.chart.syntax_cache import SyntaxCache
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -45,6 +46,11 @@ def search():
                     return json_response(SyntaxResponse.build_did_you_mean_response(did_you_mean))
                 else:
                     abort(422)
+
+@app.route("/syntax_cache")
+def syntax_cache():
+    SyntaxCache().build_cache()
+    return ok()
 
 @app.route("/related")
 def related():
