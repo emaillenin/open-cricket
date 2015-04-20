@@ -14,6 +14,7 @@ from opencricket.suggestion.suggestions import Suggestions
 from opencricket.chart.player_names import PlayerNames
 
 app = Flask(__name__)
+SyntaxCache().build_cache()
 
 
 @app.route("/")
