@@ -52,6 +52,8 @@ cfg_helpers = {
     'word_by': "word_by -> 'by'",
     'word_has': "word_has -> 'has'",
     'word_between': "word_between -> 'between'",
+    'word_batting': "word_batting -> 'batting'",
+    'word_batting_order': "word_batting_order -> '1st' | 'first' | '2nd' | 'second' | '3rd' | 'third' | '4th' | 'fourth'",
     'word_articles': "word_articles -> 'a' | 'an' | 'the'",
     'word_this_last': "word_this_last -> 'this' | 'last'",
     'word_year': "word_year -> 'year'",
