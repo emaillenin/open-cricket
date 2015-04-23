@@ -19,7 +19,6 @@ def expand_with_matches_clauses(base_syntax):
                           %s
                           %s
                           %s
-                          %s
                           wickets -> %s
                     """ % (
         build_syntax_with_expandable_filters('clause_result_by_team', word_config.match_clauses['clause_result_by_team']),
@@ -27,9 +26,8 @@ def expand_with_matches_clauses(base_syntax):
         # word_config.match_clauses['clause_batting_order'],
         # word_config.match_clauses['clause_innings_score'], word_config.match_clauses['clause_chasing_score'],
         # word_config.match_clauses['clause_wickets_left'],
-        word_config.cfg_helpers['word_won'],
+        word_config.cfg_helpers['word_won_lost'],
         word_config.cfg_helpers['word_between'],
-        word_config.cfg_helpers['word_lost'],
         word_config.cfg_helpers['word_by'],
         'nlp_number')
 

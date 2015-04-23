@@ -16,7 +16,7 @@ class TestMatchesBetweenTeams(unittest.TestCase):
         self.expected_year_match_type = '{"matches": {"clause_between_teams": { "word_between": "between", "word_and": "and", "team_A": {"team": {"team1": "india"}}, "team_B": {"team": {"team1": "england"}}}, "word_matches": "matches", "year": "2011", "match_type" : "test", "word_in": "in"}}'
 
         self.input_matches_won_by_a_team = 'matches won by india'
-        self.expected_matches_won_by_a_team = '{"matches": {"clause_result_by_team": {"word_won": "won", "word_by": "by", "team": {"team1": "india"}}, "word_matches": "matches"}}'
+        self.expected_matches_won_by_a_team = '{"matches": {"clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "word_matches": "matches"}}'
 
     def test_search(self):
         parser = SentenceParser(self.input)

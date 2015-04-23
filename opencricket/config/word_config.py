@@ -31,7 +31,7 @@ team_player_list = join_for_config(split_and_form_list(team_player_list))
 
 match_clauses = {
     'clause_between_teams': 'word_between team_A word_and team_B',
-    'clause_result_by_team': ['word_won word_by team', 'word_lost word_by team'],
+    'clause_result_by_team': ['word_won_lost word_by team'],
     'clause_batting_order': 'word_batting word_batting_order',
     'clause_innings_score': 'word_scoring innings_score',
     'clause_chasing_score': 'word_chasing target',
@@ -45,6 +45,7 @@ expandable_match_clauses = list(match_clauses.keys())
 cfg_helpers = {
     'word_in': "word_in -> 'in'",
     'word_won': "word_won -> 'won'",
+    'word_won_lost': "word_won_lost -> 'won' | 'lost'",
     'word_lost': "word_lost -> 'lost'",
     'word_by': "word_by -> 'by'",
     'word_has': "word_has -> 'has'",
