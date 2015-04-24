@@ -20,6 +20,9 @@ class TestMatchesBetweenTeams(unittest.TestCase):
         self.input_matches_won_by_a_team = 'matches won by india'
         self.expected_matches_won_by_a_team = '{"matches": {"clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "word_matches": "matches"}}'
 
+        self.input_matches_played_by_a_team = 'matches played by india'
+        self.expected_matches_played_by_a_team = '{"matches": {"clause_played_by_team": {"word_played": "played", "word_by": "by", "team": {"team1": "india"}}, "word_matches": "matches"}}'
+
         self.input_matches_won_by_a_team_against_a_team = 'matches won by india against pakistan'
         self.expected_matches_won_by_a_team_against_a_team = '{"matches": {"clause_result_against_team": {"word_won_lost": "won", "word_by": "by",  "team_A": {"team": {"team1": "india"}},  "team_B": {"team": {"team1": "pakistan"}}, "word_against": "against"}, "word_matches": "matches"}}'
 
@@ -41,6 +44,10 @@ class TestMatchesBetweenTeams(unittest.TestCase):
     def test_matches_won_by_a_team(self):
         parser = SentenceParser(self.input_matches_won_by_a_team)
         self.assertEqual(json.loads(self.expected_matches_won_by_a_team), json.loads(parser.parse_sentence()))
+
+    def test_matches_played_by_a_team(self):
+        parser = SentenceParser(self.input_matches_played_by_a_team)
+        self.assertEqual(json.loads(self.expected_matches_played_by_a_team), json.loads(parser.parse_sentence()))
 
     def test_matches_won_by_a_team_against_a_team(self):
         parser = SentenceParser(self.input_matches_won_by_a_team_against_a_team)
