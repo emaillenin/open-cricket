@@ -52,6 +52,8 @@ cfg_helpers = {
     'word_lost': "word_lost -> 'lost'",
     'word_by': "word_by -> 'by'",
     'word_played': "word_played -> 'played'",
+    'word_scoring': "word_scoring -> 'scoring'",
+    'innings_score': "innings_score -> nlp_number",
     'word_has': "word_has -> 'has'",
     'word_between': "word_between -> 'between'",
     'word_batting': "word_batting -> 'batting'",

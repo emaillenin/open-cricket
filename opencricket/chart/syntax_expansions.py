@@ -22,6 +22,7 @@ def expand_with_matches_clauses(base_syntax):
                           %s
                           %s
                           %s
+                          %s
                           wickets -> %s
                     """ % (
         build_syntax_with_expandable_filters('clause_result_by_team',
@@ -34,6 +35,8 @@ def expand_with_matches_clauses(base_syntax):
                                              word_config.match_clauses['clause_batting_order']),
         build_syntax_with_expandable_filters('clause_played_by_team',
                                              word_config.match_clauses['clause_played_by_team']),
+        build_syntax_with_expandable_filters('clause_innings_score',
+                                             word_config.match_clauses['clause_innings_score']),
         word_config.cfg_helpers['word_won_lost'],
         word_config.cfg_helpers['word_between'],
         word_config.cfg_helpers['word_by'],

@@ -29,6 +29,9 @@ class TestMatchesBetweenTeams(unittest.TestCase):
         self.input_matches_won_by_a_team_batting_first = 'matches won by india batting 1st'
         self.expected_matches_won_by_a_team_batting_first = '{"matches": {"word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "clause_batting_order": {"word_batting": "batting", "word_batting_order": "1st"}}}'
 
+        self.input_matches_won_by_a_team_innings_score = 'matches won by india scoring 300'
+        self.expected_matches_won_by_a_team_innings_score = '{"matches": {"word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "clause_innings_score": {"word_scoring": "scoring", "innings_score": "300"}}}'
+
     def test_search(self):
         parser = SentenceParser(self.input)
         self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
@@ -56,6 +59,11 @@ class TestMatchesBetweenTeams(unittest.TestCase):
     def test_matches_won_by_a_team_batting_first(self):
         parser = SentenceParser(self.input_matches_won_by_a_team_batting_first)
         self.assertEqual(json.loads(self.expected_matches_won_by_a_team_batting_first), json.loads(parser.parse_sentence()))
+
+    def test_matches_won_by_a_team_with_a_min_score(self):
+        SyntaxCache().build_cache()
+        parser = SentenceParser(self.input_matches_won_by_a_team_innings_score)
+        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_innings_score), json.loads(parser.parse_sentence()))
 
 if __name__ == '__main__':
     unittest.main()
