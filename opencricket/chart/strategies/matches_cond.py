@@ -15,10 +15,10 @@ def syntax():
         %s
         %s
         word_chased -> 'chased'
-        target -> %s
+        %s
         """ % (base_syntax_matches_cond_last_time, base_syntax_matches_cond_how_many_times,
                syntax_expansions.expand_with_filters(base_syntax_matches_cond_how_many_times),
                syntax_expansions.expand_with_filters(base_syntax_matches_cond_last_time),
                syntax_expansions.definition_for_expansion_filters('nlp_number'),
                word_config.cfg_helpers['last_time'], word_config.cfg_helpers['how_many_times'], word_config.cfg_helpers['team'],
-               'nlp_number')
+               word_config.cfg_helpers['target'])

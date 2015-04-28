@@ -32,6 +32,9 @@ class TestMatchesBetweenTeams(unittest.TestCase):
         self.input_matches_won_by_a_team_innings_score = 'matches won by india scoring 300'
         self.expected_matches_won_by_a_team_innings_score = '{"matches": {"word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "clause_innings_score": {"word_scoring": "scoring", "innings_score": "300"}}}'
 
+        self.input_matches_lost_by_a_team_while_chasing = 'matches lost by india chasing 100'
+        self.expected_matches_lost_by_a_team_while_chasing = '{"matches": {"word_matches": "matches", "clause_result_by_team": {"word_won_lost": "lost", "word_by": "by", "team": {"team1": "india"}}, "clause_chasing_score": {"word_chasing": "chasing", "target": "100"}}}'
+
     def test_search(self):
         parser = SentenceParser(self.input)
         self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
@@ -54,16 +57,21 @@ class TestMatchesBetweenTeams(unittest.TestCase):
 
     def test_matches_won_by_a_team_against_a_team(self):
         parser = SentenceParser(self.input_matches_won_by_a_team_against_a_team)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_against_a_team), json.loads(parser.parse_sentence()))
+        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_against_a_team),
+                         json.loads(parser.parse_sentence()))
 
     def test_matches_won_by_a_team_batting_first(self):
         parser = SentenceParser(self.input_matches_won_by_a_team_batting_first)
         self.assertEqual(json.loads(self.expected_matches_won_by_a_team_batting_first), json.loads(parser.parse_sentence()))
 
     def test_matches_won_by_a_team_with_a_min_score(self):
-        SyntaxCache().build_cache()
         parser = SentenceParser(self.input_matches_won_by_a_team_innings_score)
         self.assertEqual(json.loads(self.expected_matches_won_by_a_team_innings_score), json.loads(parser.parse_sentence()))
+
+    def test_matches_lost_by_a_team_while_chasing(self):
+        parser = SentenceParser(self.input_matches_lost_by_a_team_while_chasing)
+        self.assertEqual(json.loads(self.expected_matches_lost_by_a_team_while_chasing),
+                         json.loads(parser.parse_sentence()))
 
 if __name__ == '__main__':
     unittest.main()
