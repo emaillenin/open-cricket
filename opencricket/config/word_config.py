@@ -37,7 +37,7 @@ match_clauses = {
     'clause_batting_order': 'word_batting word_batting_order',
     'clause_innings_score': 'word_scoring innings_score',
     'clause_chasing_score': 'word_chasing target',
-    'clause_wickets_left': 'word_with wickets word_left'
+    'clause_wickets_left': 'word_with wickets word_wickets word_left'
 }
 
 expandable_match_clauses = list(match_clauses.keys())
@@ -48,6 +48,9 @@ cfg_helpers = {
     'word_in': "word_in -> 'in'",
     'word_won': "word_won -> 'won'",
     'word_against': "word_against -> 'against'",
+    'word_left': "word_left -> 'left'",
+    'word_wickets': "word_wickets -> 'wickets'",
+    'word_with': "word_with -> 'with'",
     'word_won_lost': "word_won_lost -> 'won' | 'lost'",
     'word_lost': "word_lost -> 'lost'",
     'word_by': "word_by -> 'by'",
@@ -56,6 +59,7 @@ cfg_helpers = {
     'word_scoring': "word_scoring -> 'scoring'",
     'innings_score': "innings_score -> nlp_number",
     'target': "target -> nlp_number",
+    'wickets': "wickets -> nlp_number",
     'word_has': "word_has -> 'has'",
     'word_between': "word_between -> 'between'",
     'word_batting': "word_batting -> 'batting'",

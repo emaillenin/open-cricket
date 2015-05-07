@@ -22,6 +22,10 @@ def syntax():
         %s
         %s
         %s
+        %s
+        %s
+        %s
+        %s
         """ % (base_syntax_matches, syntax_expansions.expand_with_filters(base_syntax_matches),
                syntax_expansions.definition_for_expansion_filters('nlp_number'),
                syntax_expansions.expand_with_matches_clauses(base_syntax_matches),
@@ -33,5 +37,9 @@ def syntax():
                word_config.cfg_helpers['innings_score'],
                word_config.cfg_helpers['word_scoring'],
                word_config.cfg_helpers['word_chasing'],
+               word_config.cfg_helpers['word_wickets'],
                word_config.cfg_helpers['target'],
+               word_config.cfg_helpers['wickets'],
+               word_config.cfg_helpers['word_left'],
+               word_config.cfg_helpers['word_with'],
                word_config.cfg_helpers['word_and'])

@@ -24,6 +24,7 @@ def expand_with_matches_clauses(base_syntax):
                           %s
                           %s
                           %s
+                          %s
                           wickets -> %s
                     """ % (
         build_syntax_with_expandable_filters('clause_result_by_team',
@@ -40,6 +41,8 @@ def expand_with_matches_clauses(base_syntax):
                                              word_config.match_clauses['clause_innings_score']),
         build_syntax_with_expandable_filters('clause_chasing_score',
                                              word_config.match_clauses['clause_chasing_score']),
+        build_syntax_with_expandable_filters('clause_wickets_left',
+                                             word_config.match_clauses['clause_wickets_left']),
         word_config.cfg_helpers['word_won_lost'],
         word_config.cfg_helpers['word_between'],
         word_config.cfg_helpers['word_by'],
@@ -73,8 +76,8 @@ def replace_nlp_placeholders(syntax):
 
 def permutate_filters(filters):
     permutated_filters = []
-    # It's okay to expand only upto 3 filter clauses. no question will have more than that
-    for i in range(1, min(len(filters) + 1, 4)):
+    # It's okay to expand only upto 4 filter clauses. no question will have more than that
+    for i in range(1, min(len(filters) + 1, 5)):
         for f in itertools.permutations(filters, i):
             permutated_filters += [list(f)]
             if 'word_in year' in f:
