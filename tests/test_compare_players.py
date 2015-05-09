@@ -2,10 +2,13 @@ import unittest
 import json
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.chart.syntax_cache import SyntaxCache
+
 
 class TestComparePlayers(unittest.TestCase):
 
     def setUp(self):
+        SyntaxCache().build_cache()
         self.input = 'compare sehwag and dhoni'
         self.expected = '{"compare": {"word_compare": "compare", "clause_player": {"elite-player_1": {"player": {"player1": "sehwag"}}, "word_and": "and", "elite-player_2": {"player": {"player1": "dhoni"}}}}}'
         

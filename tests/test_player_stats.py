@@ -2,10 +2,13 @@ import unittest
 import json
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.chart.syntax_cache import SyntaxCache
+
 
 class TestPlayerStats(unittest.TestCase):
 
     def setUp(self):
+        SyntaxCache().build_cache()
         self.input_stats = 'Dale Steyn stats'
         self.expected_stats = '{"player_stats": {"player": {"player2": "steyn", "player1": "dale"}, "word_stats": "stats"}}'
 

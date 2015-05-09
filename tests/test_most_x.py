@@ -2,11 +2,13 @@ import unittest
 import json
 
 from opencricket.chart.sentence_parser import SentenceParser
+from opencricket.chart.syntax_cache import SyntaxCache
 
 
 class TestMostX(unittest.TestCase):
 
     def setUp(self):
+        SyntaxCache().build_cache()
         self.input_sixes = 'who has the most sixes'
         self.expected_sixes = '{"most_x": {"word_most": "most", "who_player": {"word_who": "who"}, "metric": {"metric1": "sixes" }, "word_the": "the", "word_has": "has"}}'
 
