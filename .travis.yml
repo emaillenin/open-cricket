@@ -9,4 +9,4 @@ install:
   - pip install -r requirements.txt
   - python -m nltk.downloader -d . all
   - cp opencricket/config/config.ci.py opencricket/config/config.py
-script: python3 ci_build.py
+script: nosetests
