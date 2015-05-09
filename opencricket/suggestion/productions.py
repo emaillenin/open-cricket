@@ -41,7 +41,7 @@ class Productions:
             dynamic_expansions = defaultdict(list)
             for p in root_productions:
                 syntax = str(p)
-                syntax_split = self.tmp_p(syntax.split(' -> ')[1], possible_filters)
+                syntax_split = self.strip_permutation(syntax.split(' -> ')[1], possible_filters)
                 if syntax_split is None: continue
                 if not self.contains(result_productions, syntax_split): result_productions.append(syntax_split)
             for key in stats_parser._leftcorner_words.keys():
