@@ -30,7 +30,6 @@ team_list = join_for_config(split_and_form_list(team_names_list))
 team_player_list = join_for_config(split_and_form_list(team_player_list))
 
 match_clauses = {
-    'clause_between_teams': 'word_between team_A word_and team_B',
     'clause_result_by_team': ['word_won_lost word_by team'],
     'clause_played_by_team': 'word_played word_by team',
     'clause_result_against_team': 'word_won_lost word_by team_A word_against team_B',
