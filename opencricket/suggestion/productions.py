@@ -10,6 +10,7 @@ from opencricket.chart.sentence_parser import SentenceParser
 import elasticsearch
 from elasticsearch import helpers
 from opencricket.config import es_config
+from opencricket.config import word_config
 from nltk.grammar import Nonterminal
 from collections import defaultdict
 
@@ -28,9 +29,11 @@ class Productions:
         # TODO While producing expansions, do Map & Reduce instead of Iteration
         result = []
         parser = SentenceParser('')
+        possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + ['word_this_last']
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         for stats_parser in parser.cfg_parsers:
+            if not str(stats_parser.start()) == 'matches': continue
             root = str(stats_parser.start())
             root_productions = stats_parser.productions(lhs=Nonterminal(root))
             result_productions = []
@@ -38,8 +41,9 @@ class Productions:
             dynamic_expansions = defaultdict(list)
             for p in root_productions:
                 syntax = str(p)
-                syntax_split = syntax.split(' -> ')
-                result_productions.append(syntax_split[1])
+                syntax_split = self.tmp_p(syntax.split(' -> ')[1], possible_filters)
+                if syntax_split is None: continue
+                if not self.contains(result_productions, syntax_split): result_productions.append(syntax_split)
             for key in stats_parser._leftcorner_words.keys():
                 if str(key).startswith('word_'):
                     syntax_expansions[str(key)] = list(stats_parser._leftcorner_words[key])[0]
@@ -50,13 +54,11 @@ class Productions:
                     continue
                 for p in stats_parser.productions(lhs=s):
                     dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, p.rhs())))
-            result.append({root: {SYNTAX: self.strip_permutation(self.dedup_syntax_list(result_productions),
-                                                                 parser.expandable_filters() + ['word_this_last']),
+            result.append({root: {SYNTAX: result_productions,
                                   EXPANSIONS: syntax_expansions,
                                   DYNAMIC_EXPANSIONS: dynamic_expansions
                                   }})
         return result
-
 
     def explode(self, expansions_dir, exploded_dir):
         reference_expansions = {}
@@ -79,7 +81,7 @@ class Productions:
                     for dynamic_expansion in dynamic_expansion_list:
                         tmp = ' '.join(['%s'] * len(dynamic_expansion.split()))
                         final_items = list(
-                            reference_expansions[item if item.startswith('word_') else item.split('_')[0]] for item in
+                            reference_expansions[item if (item in reference_expansions or item.startswith('word_')) else item.split('_')[0]] for item in
                             dynamic_expansion.split())
                         reference_expansions[expansion_key].append(list(tmp % a for a in list(product(*final_items))))
                     reference_expansions[expansion_key] = list(chain(*reference_expansions[expansion_key]))
@@ -135,8 +137,11 @@ class Productions:
             if not self.contains(deduped_list, syntax): deduped_list.append(syntax)
         return deduped_list
 
-    def strip_permutation(self, syntax_list, possible_filters, upto=2):
-        return list(syntax for syntax in syntax_list if len(set(syntax.split()).intersection(possible_filters)) <= upto)
+    def strip_permutation(self, syntax, possible_filters, upto=2):
+        if len(set(syntax.split()).intersection(possible_filters)) <= upto:
+            return syntax
+        else:
+            return None
 
     def contains(self, syntax_list, syntax):
         for s in syntax_list:
