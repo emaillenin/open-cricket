@@ -43,7 +43,6 @@ class TestMatchesAndClauses(unittest.TestCase):
 
     def test_matches_played_by_two_teams(self):
         parser = SentenceParser(self.input_matches_played_by_two_teams)
-        print(json.loads(parser.parse_sentence()))
         self.assertEqual(json.loads(self.expected_matches_played_by_two_teams), json.loads(parser.parse_sentence()))
 
     def test_matches_won_by_a_team_against_a_team(self):
