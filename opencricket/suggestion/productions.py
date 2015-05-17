@@ -8,6 +8,7 @@ from collections import Counter
 from os.path import basename
 from opencricket.chart.sentence_parser import SentenceParser
 import elasticsearch
+from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from opencricket.config import es_config
 from opencricket.config import word_config
@@ -22,8 +23,8 @@ SYNTAX = 'syntax'
 
 
 class Productions:
-    def __init__(self, es_host=None):
-        self.es = es_config.es_builder(es_host)
+    def __init__(self, es=Elasticsearch()):
+        self.es = es
 
     def productions(self, expansions_dir):
         # TODO While producing expansions, do Map & Reduce instead of Iteration

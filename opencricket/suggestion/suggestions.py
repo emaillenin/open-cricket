@@ -1,9 +1,10 @@
+from elasticsearch import Elasticsearch
 from opencricket.config import es_config
 
 
 class Suggestions:
-    def __init__(self, es_host=None):
-        self.es = es_config.es_builder(es_host)
+    def __init__(self, es=Elasticsearch()):
+        self.es = es
 
     def suggestions(self, search_string):
         return self.es.search(index='opencricket', body=es_config.es_suggestion(search_string))
