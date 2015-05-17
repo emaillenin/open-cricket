@@ -17,6 +17,8 @@ class Suggestions:
             return None
 
     def all_suggestions(self, search_string):
+        if not self.es.ping():
+            return None
         suggestions = self.suggestions(search_string)
         hits = suggestions['hits']['hits']
         if len(hits) > 0:
