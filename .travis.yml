@@ -2,8 +2,7 @@ language: python
 python:
   - "3.4"
 env:
-  - NLTK_DATA=`pwd`
-  - OPENCRICKET_ENV=Test
+  - NLTK_DATA=`pwd` OPENCRICKET_ENV=Test
 services:
   - redis-server
 install:
