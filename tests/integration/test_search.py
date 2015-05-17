@@ -2,6 +2,7 @@ import unittest
 import json
 import flaskr
 
+
 class TestSearch(unittest.TestCase):
 
     def setUp(self):
