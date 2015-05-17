@@ -71,7 +71,7 @@ class TestProductions(unittest.TestCase):
 
         Productions().explode(expansions_path, exploded_path)
 
-        self.assertEqual(list(map(basename, glob.iglob(os.path.join(exploded_path, '*')))),
+        self.assertCountEqual(list(map(basename, glob.iglob(os.path.join(exploded_path, '*')))),
                          ['compare', 'matches', 'matches_cond', 'most_x', 'partnerships', 'player_dismissals',
                           'player_stats', 'scores'])
 
