@@ -7,3 +7,5 @@ config.py
 __pycache__
 *.pyc
 meta
+
+tests/data/exploded
