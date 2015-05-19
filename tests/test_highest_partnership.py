@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestPartnership(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input = 'highest partnership for 1st wicket for south africa'
         self.expected = '{"partnerships": {"word_wkt_order": "1st", "word_wicket": "wicket", "word_for": "for", "word_extent": "highest", "team": {"team1": "south", "team2": "africa"}, "word_partnership": "partnership"}}'
 

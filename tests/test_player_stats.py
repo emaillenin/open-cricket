@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestPlayerStats(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input_stats = 'Dale Steyn stats'
         self.expected_stats = '{"player_stats": {"player": {"player2": "steyn", "player1": "dale"}, "word_stats": "stats"}}'
 

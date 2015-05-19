@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestPlayerScores(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input_recent = 'what is the recent score of Suresh Raina'
         self.expected_recent = '{"scores": {"what_is_the": {"word_the": "the", "word_is": "is", "word_what": "what"}, "word_score": "score", "word_extent": "recent", "player": {"player2": "raina", "player1": "suresh"}, "word_of": "of"}}'
 

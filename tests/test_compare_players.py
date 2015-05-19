@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestComparePlayers(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input = 'compare sehwag and dhoni'
         self.expected = '{"compare": {"word_compare": "compare", "clause_player": {"elite-player_1": {"player": {"player1": "sehwag"}}, "word_and": "and", "elite-player_2": {"player": {"player1": "dhoni"}}}}}'
         

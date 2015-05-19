@@ -3,6 +3,7 @@ import os
 
 from opencricket.chart.player_names import PlayerNames
 
+
 class TestNameTraining(unittest.TestCase):
 
     def test_simple_names(self):

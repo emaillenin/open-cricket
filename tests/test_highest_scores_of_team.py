@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestHighestTeamScore(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input = "what is the highest score of england"
         self.expected = '{"scores": {"team": {"team1": "england"}, "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
 

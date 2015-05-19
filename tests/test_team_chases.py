@@ -6,8 +6,12 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 
 class TestTeamChases(unittest.TestCase):
-    def setUp(self):
+
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input = 'when was the last time india chased 300+'
         self.expected = '{"matches_cond": {"word_chased": "chased", "last_time": {"word_was": "was", "word_the": "the", "word_when": "when", "word_last": "last", "word_time": "time"}, "target": "300+", "team": {"team1": "india"}}}'
 

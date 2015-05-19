@@ -7,8 +7,11 @@ from opencricket.chart.syntax_cache import SyntaxCache
 
 class TestMatchesAndClauses(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         SyntaxCache().build_cache()
+
+    def setUp(self):
         self.input_matches_won_by_a_team = 'matches won by india'
         self.expected_matches_won_by_a_team = '{"matches": {"clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": {"team1": "india"}}, "word_matches": "matches"}}'
 
