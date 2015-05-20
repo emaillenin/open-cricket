@@ -3,9 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestComparePlayers(unittest.TestCase):
+class TestComparePlayers(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -26,12 +27,10 @@ class TestComparePlayers(unittest.TestCase):
         self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
 
     def test_compare_in_a_year(self):
-        parser = SentenceParser(self.input_compare_year)
-        self.assertEqual(json.loads(self.expected_compare_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_compare_year, self.expected_compare_year)
 
     def test_compare_in_a_match_type(self):
-        parser = SentenceParser(self.input_compare_in_match_type)
-        self.assertEqual(json.loads(self.expected_compare_match_type), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_compare_in_match_type, self.expected_compare_match_type)
 
 if __name__ == '__main__':
     unittest.main()

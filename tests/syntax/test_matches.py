@@ -3,9 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestMatchesAndClauses(unittest.TestCase):
+class TestMatchesAndClauses(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -37,39 +38,33 @@ class TestMatchesAndClauses(unittest.TestCase):
         self.expected_matches_won_by_a_team_with_wickets_left = '{"matches": {"match_type": "odi", "word_in": "in", "clause_wickets_left": {"wickets": "5", "word_wickets": "wickets", "word_with": "with", "word_left": "left"}, "clause_chasing_score": {"target": "300", "word_chasing": "chasing"}, "word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "team": {"team1": "india"}, "word_by": "by"}}}'
 
     def test_matches_won_by_a_team(self):
-        parser = SentenceParser(self.input_matches_won_by_a_team)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_won_by_a_team, self.expected_matches_won_by_a_team)
 
     def test_matches_played_by_a_team(self):
-        parser = SentenceParser(self.input_matches_played_by_a_team)
-        self.assertEqual(json.loads(self.expected_matches_played_by_a_team), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_played_by_a_team, self.expected_matches_played_by_a_team)
 
     def test_matches_played_by_two_teams(self):
-        parser = SentenceParser(self.input_matches_played_by_two_teams)
-        self.assertEqual(json.loads(self.expected_matches_played_by_two_teams), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_played_by_two_teams, self.expected_matches_played_by_two_teams)
 
     def test_matches_won_by_a_team_against_a_team(self):
-        parser = SentenceParser(self.input_matches_won_by_a_team_against_a_team)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_against_a_team),
-                         json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_won_by_a_team_against_a_team,
+                                  self.expected_matches_won_by_a_team_against_a_team)
 
     def test_matches_won_by_a_team_batting_first(self):
-        parser = SentenceParser(self.input_matches_won_by_a_team_batting_first)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_batting_first), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_won_by_a_team_batting_first,
+                                  self.expected_matches_won_by_a_team_batting_first)
 
     def test_matches_won_by_a_team_with_a_min_score(self):
-        parser = SentenceParser(self.input_matches_won_by_a_team_innings_score)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_innings_score), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_won_by_a_team_innings_score,
+                                  self.expected_matches_won_by_a_team_innings_score)
 
     def test_matches_lost_by_a_team_while_chasing(self):
-        parser = SentenceParser(self.input_matches_lost_by_a_team_while_chasing)
-        self.assertEqual(json.loads(self.expected_matches_lost_by_a_team_while_chasing),
-                         json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_lost_by_a_team_while_chasing,
+                                  self.expected_matches_lost_by_a_team_while_chasing)
 
     def test_matches_won_by_a_team_with_wickets_left(self):
-        parser = SentenceParser(self.input_matches_won_by_a_team_with_wickets_left)
-        self.assertEqual(json.loads(self.expected_matches_won_by_a_team_with_wickets_left),
-                         json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_matches_won_by_a_team_with_wickets_left,
+                                  self.expected_matches_won_by_a_team_with_wickets_left)
 
 if __name__ == '__main__':
     unittest.main()

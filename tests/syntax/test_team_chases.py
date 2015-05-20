@@ -1,11 +1,10 @@
 import unittest
-import json
 
-from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestTeamChases(unittest.TestCase):
+class TestTeamChases(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -19,12 +18,10 @@ class TestTeamChases(unittest.TestCase):
         self.expected_ground = '{"matches_cond": {"team": {"team1": "india"}, "word_in": "in", "how_many_times": {"word_times": "times", "word_how": "how", "word_many": "many"}, "ground": {"ground1": "chennai"}, "word_chased": "chased", "target": "300+"}}'
 
     def test_search(self):
-        parser = SentenceParser(self.input)
-        self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input, self.expected)
 
-    def test_search_gorund(self):
-        parser = SentenceParser(self.input_ground)
-        self.assertEqual(json.loads(self.expected_ground), json.loads(parser.parse_sentence()))
+    def test_search_ground(self):
+        self.assertParsedSentence(self.input_ground, self.expected_ground)
 
 
 if __name__ == '__main__':

@@ -56,6 +56,7 @@ cfg_helpers = {
     'word_by': "word_by -> 'by'",
     'word_chasing': "word_chasing -> 'chasing'",
     'word_played': "word_played -> 'played'",
+    'word_captain': "word_captain -> 'captain'",
     'word_scoring': "word_scoring -> 'scoring'",
     'innings_score': "innings_score -> nlp_number",
     'target': "target -> nlp_number",

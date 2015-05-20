@@ -3,9 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestHighestTeamScore(unittest.TestCase):
+class TestHighestTeamScore(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -19,12 +20,10 @@ class TestHighestTeamScore(unittest.TestCase):
         self.expected_in_this_year = '{"scores": {"word_year": "year", "word_this_last": "this", "word_in": "in", "team": {"team1": "england"}, "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
 
     def test_search(self):
-        parser = SentenceParser(self.input)
-        self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input, self.expected)
 
     def test_search_in_this_year(self):
-        parser = SentenceParser(self.input_in_this_year)
-        self.assertEqual(json.loads(self.expected_in_this_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_in_this_year, self.expected_in_this_year)
 
 if __name__ == "__main__":
     unittest.main()

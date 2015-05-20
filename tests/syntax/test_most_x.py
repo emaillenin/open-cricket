@@ -3,9 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestMostX(unittest.TestCase):
+class TestMostX(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -44,44 +45,34 @@ class TestMostX(unittest.TestCase):
         self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": {"team_player1": "indian"}}}}'
 
     def test_search_sixes(self):
-        parser = SentenceParser(self.input_sixes)
-        self.assertEqual(json.loads(self.expected_sixes), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_sixes, self.expected_sixes)
 
     def test_search_not_outs(self):
-        parser = SentenceParser(self.input_not_outs)
-        self.assertEqual(json.loads(self.expected_not_outs), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_not_outs, self.expected_not_outs)
 
     def test_search_bowling_strike_rate(self):
-        parser = SentenceParser(self.input_bowling_strike_rate)
-        self.assertEqual(json.loads(self.expected_bowling_strike_rate), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_bowling_strike_rate, self.expected_bowling_strike_rate)
 
     def test_search_match_type(self):
-        parser = SentenceParser(self.input_match_type)
-        self.assertEqual(json.loads(self.expected_match_type), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_match_type, self.expected_match_type)
 
     def test_search_which_player(self):
-        parser = SentenceParser(self.input_which_player)
-        self.assertEqual(json.loads(self.expected_which_player), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_which_player, self.expected_which_player)
 
     def test_search_ground(self):
-        parser = SentenceParser(self.input_ground)
-        self.assertEqual(json.loads(self.expected_ground), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_ground, self.expected_ground)
 
     def test_search_series_year(self):
-        parser = SentenceParser(self.input_series_year)
-        self.assertEqual(json.loads(self.expected_series_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_series_year, self.expected_series_year)
 
     def test_search_match_type_year(self):
-        parser = SentenceParser(self.input_match_type_year)
-        self.assertEqual(json.loads(self.expected_match_type_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_match_type_year, self.expected_match_type_year)
 
     def test_year_match_type(self):
-        parser = SentenceParser(self.input_year_match_type)
-        self.assertEqual(json.loads(self.expected_year_match_type), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_year_match_type, self.expected_year_match_type)
 
     def test_team_player(self):
-        parser = SentenceParser(self.input_team_player )
-        self.assertEqual(json.loads(self.expected_team_player), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_team_player, self.expected_team_player)
 
 if __name__ == '__main__':
     unittest.main()

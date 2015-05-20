@@ -3,9 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestPartnership(unittest.TestCase):
+class TestPartnership(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -16,8 +17,7 @@ class TestPartnership(unittest.TestCase):
         self.expected = '{"partnerships": {"word_wkt_order": "1st", "word_wicket": "wicket", "word_for": "for", "word_extent": "highest", "team": {"team1": "south", "team2": "africa"}, "word_partnership": "partnership"}}'
 
     def test_search(self):
-        parser = SentenceParser(self.input)
-        self.assertEqual(json.loads(self.expected), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input, self.expected)
 
 if __name__ == '__main__':
     unittest.main()

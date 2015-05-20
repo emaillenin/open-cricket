@@ -1,11 +1,10 @@
 import unittest
-import json
 
-from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
+from tests.support.sentence_parser_helper import SentenceParserHelper
 
 
-class TestPlayerStats(unittest.TestCase):
+class TestPlayerStats(SentenceParserHelper):
 
     @classmethod
     def setUpClass(cls):
@@ -31,28 +30,22 @@ class TestPlayerStats(unittest.TestCase):
         self.expected_last_year = '{"player_stats": {"word_year": "year", "word_this_last": "last",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
 
     def test_search_stats(self):
-        parser = SentenceParser(self.input_stats)
-        self.assertEqual(json.loads(self.expected_stats), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_stats, self.expected_stats)
 
     def test_search_series(self):
-        parser = SentenceParser(self.input_series)
-        self.assertEqual(json.loads(self.expected_series), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_series, self.expected_series)
 
     def test_search_series_year(self):
-        parser = SentenceParser(self.input_series_year)
-        self.assertEqual(json.loads(self.expected_series_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_series_year, self.expected_series_year)
 
     def test_search_year(self):
-        parser = SentenceParser(self.input_year)
-        self.assertEqual(json.loads(self.expected_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_year, self.expected_year)
 
     def test_search_this_year(self):
-        parser = SentenceParser(self.input_this_year)
-        self.assertEqual(json.loads(self.expected_this_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_this_year, self.expected_this_year)
 
     def test_search_that_year(self):
-        parser = SentenceParser(self.input_last_year)
-        self.assertEqual(json.loads(self.expected_last_year), json.loads(parser.parse_sentence()))
+        self.assertParsedSentence(self.input_last_year, self.expected_last_year)
 
 if __name__ == '__main__':
     unittest.main()
