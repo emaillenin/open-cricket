@@ -28,6 +28,9 @@ class TestMostX(SentenceParserHelper):
         self.input_which_player = 'which player has the most sixes'
         self.expected_which_player = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" }}}'
 
+        self.input_which_captain = 'which south african captain has the most sixes'
+        self.expected_which_captain = '{"most_x": {"word_the": "the", "word_has": "has", "who_player": {"word_captain": "captain", "word_which": "which", "teamplayer": {"team_player1": "south", "team_player2": "african"}}, "word_most": "most", "metric": {"metric1": "sixes" }}}'
+
         self.input_ground = 'which player has the most sixes in Chennai'
         self.expected_ground = '{"most_x": {"word_the": "the", "word_has": "has", "word_in": "in", "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" }, "ground": {"ground1": "chennai"}}}'
 
@@ -58,6 +61,9 @@ class TestMostX(SentenceParserHelper):
 
     def test_search_which_player(self):
         self.assertParsedSentence(self.input_which_player, self.expected_which_player)
+
+    def test_search_which_captain(self):
+        self.assertParsedSentence(self.input_which_captain, self.expected_which_captain)
 
     def test_search_ground(self):
         self.assertParsedSentence(self.input_ground, self.expected_ground)
