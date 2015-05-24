@@ -68,7 +68,7 @@ cfg_helpers = {
     'word_articles': "word_articles -> 'a' | 'an' | 'the'",
     'word_this_last': "word_this_last -> 'this' | 'last'",
     'word_year': "word_year -> 'year'",
-
+    'word_as': "word_as -> 'as'",
     'word_extent': "word_extent -> 'highest' | 'lowest' | 'recent'",
     'word_and': "word_and -> 'and'",
     'word_wkt_order': "word_wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",

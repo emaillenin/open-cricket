@@ -2,9 +2,12 @@ import itertools
 from opencricket.config import word_config
 
 
-def expand_with_filters(base_syntax):
+def expand_with_filters(base_syntax, additional_clauses=None):
     final_syntax = ''
-    for f in permutate_filters(word_config.expandable_filters_in):
+    final_filters = word_config.expandable_filters_in
+    if additional_clauses is not None:
+        final_filters = final_filters + additional_clauses
+    for f in permutate_filters(final_filters):
         final_syntax += """%s %s\n""" % (base_syntax, ' '.join(f))
     return final_syntax
 
@@ -60,10 +63,12 @@ def definition_for_expansion_filters(year):
         word_config.cfg_helpers['in_match_type'],
         year)
 
+
 def replace_nlp_placeholders(syntax):
     for r in ['nlp_player', 'nlp_ground', 'nlp_number']:
         syntax = syntax.replace(r, word_config.cfg_helpers[r])
     return syntax
+
 
 def permutate_filters(filters):
     permutated_filters = []
