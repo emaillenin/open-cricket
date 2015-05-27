@@ -3,10 +3,10 @@ import json
 
 from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
-from tests.support.sentence_parser_helper import SentenceParserHelper
+from tests.support.sentence_parser_helper import SentenceParserAssert
 
 
-class TestHighestTeamScore(SentenceParserHelper):
+class TestHighestTeamScore(SentenceParserAssert):
 
     @classmethod
     def setUpClass(cls):

@@ -1,10 +1,10 @@
 import unittest
 
 from opencricket.chart.syntax_cache import SyntaxCache
-from tests.support.sentence_parser_helper import SentenceParserHelper
+from tests.support.sentence_parser_helper import SentenceParserAssert
 
 
-class TestTeamChases(SentenceParserHelper):
+class TestTeamChases(SentenceParserAssert):
 
     @classmethod
     def setUpClass(cls):
