@@ -47,6 +47,9 @@ class TestMostX(SentenceParserAssert):
         self.input_team_player = 'which Indian player has the most runs in World Cup in Australia'
         self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": {"team_player1": "indian"}}}}'
 
+        self.input_against_team = 'which player has the most sixes against India'
+        self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" },  "word_against": "against", "team": {"team1": "india"}}}'
+
     def test_search_sixes(self):
         self.assertParsedSentence(self.input_sixes, self.expected_sixes)
 
@@ -79,6 +82,9 @@ class TestMostX(SentenceParserAssert):
 
     def test_team_player(self):
         self.assertParsedSentence(self.input_team_player, self.expected_team_player)
+
+    def test_against_team(self):
+        self.assertParsedSentence(self.input_against_team, self.expected_against_team)
 
 if __name__ == '__main__':
     unittest.main()
