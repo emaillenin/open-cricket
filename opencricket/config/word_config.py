@@ -46,6 +46,8 @@ expandable_match_clauses = list(match_clauses.keys())
 
 cfg_helpers = {
     'word_in': "word_in -> 'in'",
+    'word_a': "word_a -> 'a'",
+    'word_team': "word_team -> 'team'",
     'word_won': "word_won -> 'won'",
     'word_against': "word_against -> 'against'",
     'word_left': "word_left -> 'left'",
