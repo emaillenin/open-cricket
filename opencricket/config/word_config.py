@@ -13,7 +13,7 @@ metric_list = join_for_config(
     ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
      'wickets', 'not', 'outs', 'high', 'individual', 'score', 'balls', 'faced', 'minutes', 'strike', 'rate',
      'average', 'thirties', 'bowled', 'maiden', 'over', 'overs', 'conceded', 'best', 'bowling', 'figure',
-     'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten', 'nineties'])
+     'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten', 'nineties', 'ducks'])
 series_list = join_for_config(
     ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
      't20', 'trophy', 'icc', 'twenty20'])
