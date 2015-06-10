@@ -12,7 +12,7 @@ def form_multi_word_config(words_list):
     return list("'" + "' '".join(w.split()) + "'" for w in words_list)
 
 ignore_title_case_words = {'odi', 't20', 'test', 't20i', 'ipl'}
-match_type_list = ['test', 'odi', 't20i', 't20']
+match_type_list = join_for_pipe_config(form_multi_word_config(['test', 'odi', 't20i', 't20']))
 expandable_filters = ['match_type', 'series', 'year', 'ground']
 expandable_filters_in = list('word_in ' + e for e in expandable_filters)
 metric_list = join_for_pipe_config(form_multi_word_config(
@@ -94,7 +94,7 @@ cfg_helpers = {
             """,
     'in_match_type': """
             match_type -> %s
-            """ % join_for_config(match_type_list),
+            """ % match_type_list,
     'last_time': """
             last_time -> word_when word_was word_the word_last word_time
             word_when -> 'when'
