@@ -15,11 +15,11 @@ ignore_title_case_words = {'odi', 't20', 'test', 't20i', 'ipl'}
 match_type_list = ['test', 'odi', 't20i', 't20']
 expandable_filters = ['match_type', 'series', 'year', 'ground']
 expandable_filters_in = list('word_in ' + e for e in expandable_filters)
-metric_list = join_for_config(
+metric_list = join_for_pipe_config(form_multi_word_config(
     ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
-     'wickets', 'not', 'outs', 'high', 'individual', 'score', 'balls', 'faced', 'minutes', 'strike', 'rate',
-     'average', 'thirties', 'bowled', 'maiden', 'over', 'overs', 'conceded', 'best', 'bowling', 'figure',
-     'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten', 'nineties', 'ducks'])
+     'wickets', 'not outs', 'individual score', 'balls faced', 'minutes', 'strike rate','bowling strike rate',
+     'average', 'thirties', 'balls bowled', 'maiden overs', 'runs conceded', 'best bowling figure',
+     'catches', 'stumpings', 'economy rate', 'five wicket haul', 'ten wicket haul', 'nineties', 'ducks']))
 series_list = join_for_pipe_config(form_multi_word_config(
     ['ipl', 'world cup', 'clt20']))
 team_names_list = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
@@ -90,12 +90,7 @@ cfg_helpers = {
             series -> """ + series_list + """
             """,
     'metric': """
-            metric -> metric1 metric2 metric3
-            metric -> metric1 metric2
-            metric -> metric1
-            metric1 -> """ + metric_list + """
-            metric2 -> """ + metric_list + """
-            metric3 -> """ + metric_list + """
+            metric -> """ + metric_list + """
             """,
     'in_match_type': """
             match_type -> %s
