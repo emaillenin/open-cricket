@@ -30,10 +30,10 @@ team_names_list = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'ban
                    'pwi', 'delhi daredevils', 'dd', 'new zealand', 'nz', 'south africa', 'sa', 'sri lanka', 'sl',
                    'west indies',
                    'wi', 'uae', 'east africa', 'hong kong']
-team_player_list = team_names_list + ['indian', 'australian', 'kenyan', 'canadian', 'namibian', 'african',
-                                      'lankan', 'pakistani']
+team_player_list = team_names_list + ['indian', 'australian', 'kenyan', 'canadian', 'namibian', 'south african',
+                                      'sri lankan', 'pakistani']
 team_list = join_for_pipe_config(form_multi_word_config(team_names_list))
-team_player_list = join_for_config(split_and_form_list(team_player_list))
+team_player_config_list = join_for_pipe_config(form_multi_word_config(team_player_list))
 
 match_clauses = {
     'clause_result_by_team': ['word_won_lost word_by team',
@@ -85,12 +85,7 @@ cfg_helpers = {
             team -> """ + team_list + """
             """,
     'teamplayer': """
-            teamplayer -> team_player1 team_player2 team_player3
-            teamplayer -> team_player1 team_player2
-            teamplayer -> team_player1
-            team_player1 -> """ + team_player_list + """
-            team_player2 -> """ + team_player_list + """
-            team_player3 -> """ + team_player_list + """
+            teamplayer -> """ + team_player_config_list + """
             """,
     'series': """
             series -> series1 series2 series3

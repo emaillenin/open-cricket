@@ -1,7 +1,5 @@
 import unittest
-import json
 
-from opencricket.chart.sentence_parser import SentenceParser
 from opencricket.chart.syntax_cache import SyntaxCache
 from tests.support.sentence_parser_helper import SentenceParserAssert
 
@@ -29,7 +27,7 @@ class TestMostX(SentenceParserAssert):
         self.expected_which_player = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" }}}'
 
         self.input_which_captain = 'which south african captain has the most sixes'
-        self.expected_which_captain = '{"most_x": {"word_the": "the", "word_has": "has", "who_player": {"word_captain": "captain", "word_which": "which", "teamplayer": {"team_player1": "south", "team_player2": "african"}}, "word_most": "most", "metric": {"metric1": "sixes" }}}'
+        self.expected_which_captain = '{"most_x": {"word_the": "the", "word_has": "has", "who_player": {"word_captain": "captain", "word_which": "which", "teamplayer": "south african"}, "word_most": "most", "metric": {"metric1": "sixes" }}}'
 
         self.input_ground = 'which player has the most sixes in Chennai'
         self.expected_ground = '{"most_x": {"word_the": "the", "word_has": "has", "word_in": "in", "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" }, "ground": {"ground1": "chennai"}}}'
@@ -45,7 +43,7 @@ class TestMostX(SentenceParserAssert):
         self.expected_year_match_type = '{"most_x": {"year": "2014", "metric": {"metric1": "runs" }, "word_in": "in", "match_type": "t20", "word_most": "most", "word_the": "the", "word_has": "has", "who_player": {"word_who": "who"}}}'
 
         self.input_team_player = 'which Indian player has the most runs in World Cup in Australia'
-        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": {"team_player1": "indian"}}}}'
+        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": "indian"}}}'
 
         self.input_against_team = 'which player has the most sixes against India'
         self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" },  "word_against": "against", "team": "india"}}'
