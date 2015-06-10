@@ -21,7 +21,7 @@ class TestMatchesAndClauses(SentenceParserAssert):
         self.expected_matches_played_by_two_teams = '{"matches": {"clause_result_by_team": {"word_played": "played", "team_B": {"team": "sri lanka"}, "word_by": "by", "word_and": "and", "team_A": {"team": "india"}}, "word_matches": "matches"}}'
 
         self.input_matches_won_by_a_team_against_a_team = 'matches won by india against pakistan in world cup'
-        self.expected_matches_won_by_a_team_against_a_team = '{"matches": {"word_in": "in", "series": {"series1": "world", "series2": "cup"}, "clause_result_by_team": {"word_won_lost": "won", "word_by": "by",  "team_A": {"team": "india"},  "team_B": {"team": "pakistan"}, "word_against": "against"}, "word_matches": "matches"}}'
+        self.expected_matches_won_by_a_team_against_a_team = '{"matches": {"word_in": "in", "series": "world cup", "clause_result_by_team": {"word_won_lost": "won", "word_by": "by",  "team_A": {"team": "india"},  "team_B": {"team": "pakistan"}, "word_against": "against"}, "word_matches": "matches"}}'
 
         self.input_matches_won_by_a_team_batting_first = 'matches won by india batting 1st in odi'
         self.expected_matches_won_by_a_team_batting_first = '{"matches": {"word_matches": "matches", "match_type" : "odi", "word_in": "in", "clause_result_by_team": {"word_won_lost": "won", "word_by": "by", "team": "india"}, "clause_batting_order": {"word_batting": "batting", "word_batting_order": "1st"}}}'

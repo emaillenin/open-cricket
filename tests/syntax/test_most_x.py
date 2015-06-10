@@ -34,7 +34,7 @@ class TestMostX(SentenceParserAssert):
 
         # Title case not to be detected as Ground
         self.input_series_year = 'which player has the most sixes in World Cup in 2011'
-        self.expected_series_year = '{"most_x": {"metric": {"metric1": "sixes" }, "word_the": "the", "word_has": "has", "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "year": "2011", "who_player": {"word_player": "player", "word_which": "which"}}}'
+        self.expected_series_year = '{"most_x": {"metric": {"metric1": "sixes" }, "word_the": "the", "word_has": "has", "word_in": "in", "series": "world cup", "word_most": "most", "year": "2011", "who_player": {"word_player": "player", "word_which": "which"}}}'
 
         self.input_match_type_year = 'which player has the most runs in 2011 in test'
         self.expected_match_type_year = '{"most_x": {"year": "2011", "metric": {"metric1": "runs" }, "word_in": "in", "match_type": "test", "word_most": "most", "word_the": "the", "word_has": "has", "who_player": {"word_player": "player", "word_which": "which"}}}'
@@ -43,7 +43,7 @@ class TestMostX(SentenceParserAssert):
         self.expected_year_match_type = '{"most_x": {"year": "2014", "metric": {"metric1": "runs" }, "word_in": "in", "match_type": "t20", "word_most": "most", "word_the": "the", "word_has": "has", "who_player": {"word_who": "who"}}}'
 
         self.input_team_player = 'which Indian player has the most runs in World Cup in Australia'
-        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": "indian"}}}'
+        self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": "world cup", "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": "indian"}}}'
 
         self.input_against_team = 'which player has the most sixes against India'
         self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" },  "word_against": "against", "team": "india"}}'

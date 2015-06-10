@@ -20,9 +20,8 @@ metric_list = join_for_config(
      'wickets', 'not', 'outs', 'high', 'individual', 'score', 'balls', 'faced', 'minutes', 'strike', 'rate',
      'average', 'thirties', 'bowled', 'maiden', 'over', 'overs', 'conceded', 'best', 'bowling', 'figure',
      'catches', 'stumpings', 'economy', 'five', 'wicket', 'haul', 'ten', 'nineties', 'ducks'])
-series_list = join_for_config(
-    ['ipl', 'indian', 'premier', 'league', 'champions', 'league', 'world', 'cup', 'clt20',
-     't20', 'trophy', 'icc', 'twenty20'])
+series_list = join_for_pipe_config(form_multi_word_config(
+    ['ipl', 'world cup', 'clt20']))
 team_names_list = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
                    'ireland', 'netherlands', 'scotland', 'canada', 'bermuda', 'namibia', 'usa', 'chennai super kings',
                    'csk', 'royal challengers bangalore', 'rcb', 'rajastan royals', 'rr', 'sunrisers hyderabad', 'srh',
@@ -88,12 +87,7 @@ cfg_helpers = {
             teamplayer -> """ + team_player_config_list + """
             """,
     'series': """
-            series -> series1 series2 series3
-            series -> series1 series2
-            series -> series1
-            series1 -> """ + series_list + """
-            series2 -> """ + series_list + """
-            series3 -> """ + series_list + """
+            series -> """ + series_list + """
             """,
     'metric': """
             metric -> metric1 metric2 metric3

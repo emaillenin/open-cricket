@@ -21,10 +21,10 @@ class TestPlayerStats(SentenceParserAssert):
         self.expected_stats_against_team = '{"player_stats": {"player": {"player1": "jayasuriya"}, "word_stats": "stats", "word_against": "against", "team": "south africa"}}'
 
         self.input_series = 'Dale Steyn stats in ipl'
-        self.expected_series = '{"player_stats": {"word_stats": "stats", "series": {"series1": "ipl"}, "player": {"player1": "dale", "player2": "steyn"}, "word_in": "in"}}'
+        self.expected_series = '{"player_stats": {"word_stats": "stats", "series": "ipl", "player": {"player1": "dale", "player2": "steyn"}, "word_in": "in"}}'
 
         self.input_series_year = 'Yuvraj Singh stats in world cup in 2011'
-        self.expected_series_year = '{"player_stats": {"word_stats": "stats", "word_in": "in", "year": "2011", "series": {"series1": "world", "series2": "cup"}, "player": {"player1": "yuvraj", "player2": "singh"}}}'
+        self.expected_series_year = '{"player_stats": {"word_stats": "stats", "word_in": "in", "year": "2011", "series": "world cup", "player": {"player1": "yuvraj", "player2": "singh"}}}'
 
         self.input_year = 'Kumar Sangakkara stats in 2011 as captain'
         self.expected_year = '{"player_stats": {"player": {"player1": "kumar", "player2": "sangakkara"}, "word_stats": "stats", "year": "2011", "word_in": "in", "word_as": "as", "word_captain": "captain"}}'
