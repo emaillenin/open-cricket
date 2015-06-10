@@ -90,7 +90,7 @@ class SentenceParser:
             if isinstance(t, nltk.Tree) and isinstance(t[0], nltk.Tree):
                 tdict[t.label()] = self.tree_to_dict(t)
             elif isinstance(t, nltk.Tree):
-                tdict[t.label()] = t[0]
+                tdict[t.label()] = ' '.join(t)
         return tdict
 
     def dict_to_json(self, dictionary):

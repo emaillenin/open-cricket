@@ -14,7 +14,7 @@ class TestPartnership(SentenceParserAssert):
 
     def setUp(self):
         self.input = 'highest partnership for 1st wicket for south africa'
-        self.expected = '{"partnerships": {"word_wkt_order": "1st", "word_wicket": "wicket", "word_for": "for", "word_extent": "highest", "team": {"team1": "south", "team2": "africa"}, "word_partnership": "partnership"}}'
+        self.expected = '{"partnerships": {"word_wkt_order": "1st", "word_wicket": "wicket", "word_for": "for", "word_extent": "highest", "team": "south africa", "word_partnership": "partnership"}}'
 
     def test_search(self):
         self.assertParsedSentence(self.input, self.expected)

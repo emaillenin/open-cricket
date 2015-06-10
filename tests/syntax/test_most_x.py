@@ -48,7 +48,7 @@ class TestMostX(SentenceParserAssert):
         self.expected_team_player = '{"most_x": {"ground": {"ground1": "australia"}, "metric": {"metric1": "runs" }, "word_in": "in", "series": {"series2": "cup", "series1": "world"}, "word_most": "most", "word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which", "teamplayer": {"team_player1": "indian"}}}}'
 
         self.input_against_team = 'which player has the most sixes against India'
-        self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" },  "word_against": "against", "team": {"team1": "india"}}}'
+        self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": {"metric1": "sixes" },  "word_against": "against", "team": "india"}}'
 
     def test_search_sixes(self):
         self.assertParsedSentence(self.input_sixes, self.expected_sixes)

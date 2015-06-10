@@ -1,9 +1,15 @@
 def join_for_config(words):
     return ' "' + '" | "'.join(words) + '" '
 
+def join_for_pipe_config(words):
+    return ' | '.join(words)
+
 
 def split_and_form_list(source):
     return list(set(sum([s.split() for s in source], [])))
+
+def form_multi_word_config(words_list):
+    return list("'" + "' '".join(w.split()) + "'" for w in words_list)
 
 ignore_title_case_words = {'odi', 't20', 'test', 't20i', 'ipl'}
 match_type_list = ['test', 'odi', 't20i', 't20']
@@ -26,7 +32,7 @@ team_names_list = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'ban
                    'wi', 'uae', 'east africa', 'hong kong']
 team_player_list = team_names_list + ['indian', 'australian', 'kenyan', 'canadian', 'namibian', 'african',
                                       'lankan', 'pakistani']
-team_list = join_for_config(split_and_form_list(team_names_list))
+team_list = join_for_pipe_config(form_multi_word_config(team_names_list))
 team_player_list = join_for_config(split_and_form_list(team_player_list))
 
 match_clauses = {
@@ -76,12 +82,7 @@ cfg_helpers = {
     'word_wkt_order': "word_wkt_order -> '1st'| '2nd'| '3rd'| '4th'| '5th'| '6th'| '7th'| '8th'| '9th'| '10th'",
     'dismissals': "dismissals -> 'bowled' | 'caught' | 'lbw' | 'run out' | 'stumping' | 'hit_wicket'",
     'team': """
-            team -> team1 team2 team3
-            team -> team1 team2
-            team -> team1
-            team1 -> """ + team_list + """
-            team2 -> """ + team_list + """
-            team3 -> """ + team_list + """
+            team -> """ + team_list + """
             """,
     'teamplayer': """
             teamplayer -> team_player1 team_player2 team_player3

@@ -14,10 +14,10 @@ class TestHighestTeamScore(SentenceParserAssert):
 
     def setUp(self):
         self.input = "what is the highest score of england"
-        self.expected = '{"scores": {"team": {"team1": "england"}, "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
+        self.expected = '{"scores": {"team": "england", "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
 
         self.input_in_this_year = "what is the highest score of england in this year"
-        self.expected_in_this_year = '{"scores": {"word_year": "year", "word_this_last": "this", "word_in": "in", "team": {"team1": "england"}, "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
+        self.expected_in_this_year = '{"scores": {"word_year": "year", "word_this_last": "this", "word_in": "in", "team": "england", "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'
 
         self.input_highest_single_team = "what is the highest score of a team"
         self.expected_highest_single_team = '{"scores": {"word_a": "a", "word_team": "team", "what_is_the": {"word_is": "is", "word_what": "what", "word_the": "the"}, "word_score": "score", "word_extent": "highest", "word_of": "of"}}'

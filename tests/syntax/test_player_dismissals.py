@@ -14,7 +14,7 @@ class TestPlayerDismissals(SentenceParserAssert):
 
     def setUp(self):
         self.input = 'dismissals by bowled in india'
-        self.expected = '{"player_dismissals": {"word_by": "by", "word_in": "in", "dismissals": "bowled", "word_dismissals": "dismissals", "team": {"team1": "india"}}}'
+        self.expected = '{"player_dismissals": {"word_by": "by", "word_in": "in", "dismissals": "bowled", "word_dismissals": "dismissals", "team": "india"}}'
 
     def test_search(self):
         self.assertParsedSentence(self.input, self.expected)

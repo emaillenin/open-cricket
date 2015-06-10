@@ -18,7 +18,7 @@ class TestPlayerStats(SentenceParserAssert):
         self.expected_stats_as_captain = '{"player_stats": {"player": {"player2": "steyn", "player1": "dale"}, "word_stats": "stats", "word_as": "as", "word_captain": "captain"}}'
 
         self.input_stats_against_team = 'Jayasuriya stats against south africa'
-        self.expected_stats_against_team = '{"player_stats": {"player": {"player1": "jayasuriya"}, "word_stats": "stats", "word_against": "against", "team": {"team1": "south", "team2": "africa"}}}'
+        self.expected_stats_against_team = '{"player_stats": {"player": {"player1": "jayasuriya"}, "word_stats": "stats", "word_against": "against", "team": "south africa"}}'
 
         self.input_series = 'Dale Steyn stats in ipl'
         self.expected_series = '{"player_stats": {"word_stats": "stats", "series": {"series1": "ipl"}, "player": {"player1": "dale", "player2": "steyn"}, "word_in": "in"}}'
