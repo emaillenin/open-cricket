@@ -61,7 +61,7 @@ class TestProductions(unittest.TestCase):
         matches_productions['expansions'].pop('word_this_last')
 
         # Unable to assert the actual list content. It permutation order changes every time. Not reproducible.
-        self.assertEqual(len(matches_productions['syntax']), 55)
+        self.assertEqual(len(matches_productions['syntax']), 11)
         self.assertEqual(matches_productions['expansions'], self.expansions)
         self.assertEqual(matches_productions['dynamic_expansions'], self.dynamic_expansions)
 

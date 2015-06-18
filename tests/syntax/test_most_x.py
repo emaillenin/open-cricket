@@ -48,7 +48,7 @@ class TestMostX(SentenceParserAssert):
         self.input_against_team = 'which player has the most sixes against India'
         self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": "sixes",  "word_against": "against", "team": "india"}}'
 
-        self.input_bowling_figure = 'who has the best bowling figure'
+        self.input_bowling_figure = 'who has the best bowling figure?'
         self.expected_bowling_figure = '{"most_x": {"word_has": "has", "word_most": "best", "word_the": "the", "who_player": {"word_who": "who"}, "metric": "bowling figure"}}'
 
         self.input_bowling_average = 'who has the best bowling average'

@@ -30,7 +30,7 @@ class Productions:
         # TODO While producing expansions, do Map & Reduce instead of Iteration
         result = []
         parser = SentenceParser('')
-        possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + ['word_this_last']
+        possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + ['word_this_last', 'word_against', 'word_captain']
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         for stats_parser in parser.cfg_parsers:
@@ -138,7 +138,7 @@ class Productions:
             if not self.contains(deduped_list, syntax): deduped_list.append(syntax)
         return deduped_list
 
-    def strip_permutation(self, syntax, possible_filters, upto=2):
+    def strip_permutation(self, syntax, possible_filters, upto=1):
         if len(set(syntax.split()).intersection(possible_filters)) <= upto:
             return syntax
         else:

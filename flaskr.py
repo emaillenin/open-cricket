@@ -64,6 +64,11 @@ def related():
 def production():
     return json_response(Productions(es_connection()).productions(config.expansions_dir))
 
+@app.route("/explosions")
+def explode():
+    json_response(Productions(es_connection()).explode(config.expansions_dir, config.exploded_dir))
+    return ok()
+
 @app.route("/suggestions")
 def suggestions():
     return json_response(Suggestions(es_connection()).suggestions(request.args.get('search', '')))
