@@ -6,4 +6,5 @@ import unittest
 class SentenceParserAssert(unittest.TestCase):
     def assertParsedSentence(self, input_search, expected_json_string):
         parser = SentenceParser(input_search)
+        # print(parser.parse_sentence())
         self.assertEqual(json.loads(expected_json_string), json.loads(parser.parse_sentence()))

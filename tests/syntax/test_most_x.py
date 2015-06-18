@@ -48,6 +48,12 @@ class TestMostX(SentenceParserAssert):
         self.input_against_team = 'which player has the most sixes against India'
         self.expected_against_team = '{"most_x": {"word_the": "the", "word_has": "has",  "who_player": {"word_player": "player", "word_which": "which"}, "word_most": "most", "metric": "sixes",  "word_against": "against", "team": "india"}}'
 
+        self.input_bowling_figure = 'who has the best bowling figure'
+        self.expected_bowling_figure = '{"most_x": {"word_has": "has", "word_most": "best", "word_the": "the", "who_player": {"word_who": "who"}, "metric": "bowling figure"}}'
+
+        self.input_bowling_average = 'who has the best bowling average'
+        self.expected_bowling_average = '{"most_x": {"word_has": "has", "word_most": "best", "metric": "bowling average", "who_player": {"word_who": "who"}, "word_the": "the"}}'
+
     def test_search_sixes(self):
         self.assertParsedSentence(self.input_sixes, self.expected_sixes)
 
@@ -83,6 +89,12 @@ class TestMostX(SentenceParserAssert):
 
     def test_against_team(self):
         self.assertParsedSentence(self.input_against_team, self.expected_against_team)
+
+    def test_bowling_figure(self):
+        self.assertParsedSentence(self.input_bowling_figure, self.expected_bowling_figure)
+
+    def test_bowling_average(self):
+        self.assertParsedSentence(self.input_bowling_average, self.expected_bowling_average)
 
 if __name__ == '__main__':
     unittest.main()

@@ -17,7 +17,7 @@ expandable_filters_in = list('word_in ' + e for e in expandable_filters)
 metric_list = join_for_pipe_config(form_multi_word_config(
     ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
      'wickets', 'not outs', 'individual score', 'balls faced', 'minutes', 'strike rate', 'bowling strike rate',
-     'average', 'thirties', 'balls bowled', 'maiden overs', 'runs conceded', 'best bowling figure',
+     'average', 'thirties', 'balls bowled', 'maiden overs', 'runs conceded', 'bowling figure', 'bowling average',
      'catches', 'stumpings', 'economy rate', 'five wicket haul', 'ten wicket haul', 'nineties', 'ducks',
      'man of the match']))
 series_list = join_for_pipe_config(form_multi_word_config(
