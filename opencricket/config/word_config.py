@@ -4,7 +4,6 @@ def join_for_config(words):
 def join_for_pipe_config(words):
     return ' | '.join(words)
 
-
 def split_and_form_list(source):
     return list(set(sum([s.split() for s in source], [])))
 
@@ -17,9 +16,10 @@ expandable_filters = ['match_type', 'series', 'year', 'ground']
 expandable_filters_in = list('word_in ' + e for e in expandable_filters)
 metric_list = join_for_pipe_config(form_multi_word_config(
     ['fifties', 'sixes', 'fours', '100s', '50s', '30s', 'hundreds', 'centuries', 'matches', 'innings', 'runs',
-     'wickets', 'not outs', 'individual score', 'balls faced', 'minutes', 'strike rate','bowling strike rate',
+     'wickets', 'not outs', 'individual score', 'balls faced', 'minutes', 'strike rate', 'bowling strike rate',
      'average', 'thirties', 'balls bowled', 'maiden overs', 'runs conceded', 'best bowling figure',
-     'catches', 'stumpings', 'economy rate', 'five wicket haul', 'ten wicket haul', 'nineties', 'ducks']))
+     'catches', 'stumpings', 'economy rate', 'five wicket haul', 'ten wicket haul', 'nineties', 'ducks',
+     'man of the match']))
 series_list = join_for_pipe_config(form_multi_word_config(
     ['ipl', 'world cup', 'clt20']))
 team_names_list = ['india', 'pakistan', 'australia', 'england', 'zimbabwe', 'bangladesh', 'afghanistan', 'kenya',
@@ -114,6 +114,7 @@ cfg_helpers = {
 
 def empty_pos(pos, tag):
     return len([p[0] for p in pos if p[1] == tag]) == 0
+
 
 def extract_words_with_tag(pos, tag):
     return [p[0] for p in pos if p[1] == tag]
