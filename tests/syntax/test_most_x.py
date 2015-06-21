@@ -55,7 +55,7 @@ class TestMostX(SentenceParserAssert):
         self.expected_bowling_average = '{"most_x": {"word_has": "has", "word_most": "best", "metric": "bowling average", "who_player": {"word_who": "who"}, "word_the": "the"}}'
 
         self.input_single_year = 'who has the most runs in a single year'
-        self.expected_single_year = '{"most_x": {"word_the": "the", "word_single": "single", "word_most": "most", "word_has": "has", "word_a": "a", "metric": "runs", "who_player": {"word_who": "who"}, "word_in": "in", "word_year": "year"}}'
+        self.expected_single_year = '{"most_x": {"word_the": "the", "single_year": "single year","word_most": "most", "word_has": "has", "word_a": "a", "metric": "runs", "who_player": {"word_who": "who"}, "word_in": "in"}}'
 
     def test_search_sixes(self):
         self.assertParsedSentence(self.input_sixes, self.expected_sixes)
