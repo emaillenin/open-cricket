@@ -2,12 +2,16 @@ import glob
 import os
 from os.path import basename
 import unittest
-import json
+from opencricket.chart.syntax_cache import SyntaxCache
 
 from opencricket.suggestion.productions import Productions
 
 
 class TestProductions(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        SyntaxCache().build_cache()
+
     def setUp(self):
         self.expansions = {
             "word_in": "in",
@@ -25,6 +29,22 @@ class TestProductions(unittest.TestCase):
             "word_wickets": "wickets",
             "word_chasing": "chasing"
         }
+
+        self.most_x_expansions = {'word_a': 'a',
+                                  'word_against': 'against',
+                                  'word_captain': 'captain',
+                                  'word_has': 'has',
+                                  'word_in': 'in',
+                                  'word_player': 'player',
+                                  'word_the': 'the',
+                                  'word_which': 'which',
+                                  'word_who': 'who',
+                                  'word_year': 'year',
+                                  'words_single_ground': 'single ground',
+                                  'words_single_innings': 'single innings',
+                                  'words_single_match': 'single match',
+                                  'words_single_series': 'single series',
+                                  'words_single_year': 'single year'}
 
         self.dynamic_expansions = {
             "clause_innings_score": [
@@ -54,16 +74,21 @@ class TestProductions(unittest.TestCase):
         self.assertEqual(8, len(productions))
 
         matches_productions = productions[1]['matches']
+        most_x_productions = productions[3]['most_x']
 
         # Remove keys that get random words everytime (1st, 2nd etc). Should fix this, to get reproducible results.
         matches_productions['expansions'].pop('word_batting_order')
         matches_productions['expansions'].pop('word_won_lost')
         matches_productions['expansions'].pop('word_this_last')
+        most_x_productions['expansions'].pop('word_this_last')
+        most_x_productions['expansions'].pop('word_most')
 
         # Unable to assert the actual list content. It permutation order changes every time. Not reproducible.
         self.assertEqual(len(matches_productions['syntax']), 11)
         self.assertEqual(matches_productions['expansions'], self.expansions)
         self.assertEqual(matches_productions['dynamic_expansions'], self.dynamic_expansions)
+
+        self.assertEqual(most_x_productions['expansions'], self.most_x_expansions)
 
     def test_explode(self):
         expansions_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'expansions')

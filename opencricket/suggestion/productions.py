@@ -30,7 +30,8 @@ class Productions:
         # TODO While producing expansions, do Map & Reduce instead of Iteration
         result = []
         parser = SentenceParser('')
-        possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + ['word_this_last', 'word_against', 'word_captain']
+        possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + \
+                           ['word_this_last', 'word_against', 'word_captain', 'single']
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         for stats_parser in parser.cfg_parsers:
@@ -53,8 +54,11 @@ class Productions:
                 if key == root or any(char.isdigit() for char in key) or key.startswith('word_') or any(
                         key.startswith(f) for f in expansion_files):
                     continue
-                for p in stats_parser.productions(lhs=s):
-                    dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, p.rhs())))
+                for dynamic_production in stats_parser.productions(lhs=s):
+                    if key.startswith('words_'):
+                        syntax_expansions[str(s).split(' -> ')[0]] = ' '.join(list(dynamic_production._rhs))
+                    else:
+                        dynamic_expansions[str(s).split(' -> ')[0]].append(' '.join(map(str, dynamic_production.rhs())))
             result.append({root: {SYNTAX: result_productions,
                                   EXPANSIONS: syntax_expansions,
                                   DYNAMIC_EXPANSIONS: dynamic_expansions
@@ -82,8 +86,9 @@ class Productions:
                     for dynamic_expansion in dynamic_expansion_list:
                         tmp = ' '.join(['%s'] * len(dynamic_expansion.split()))
                         final_items = list(
-                            reference_expansions[item if (item in reference_expansions or item.startswith('word_')) else item.split('_')[0]] for item in
-                            dynamic_expansion.split())
+                            reference_expansions[item if (item in reference_expansions or item.startswith('word_') or
+                                                          item.startswith('words_')) else item.split('_')[0]] for item
+                            in dynamic_expansion.split())
                         reference_expansions[expansion_key].append(list(tmp % a for a in list(product(*final_items))))
                     reference_expansions[expansion_key] = list(chain(*reference_expansions[expansion_key]))
                 for s in syntax_list:
