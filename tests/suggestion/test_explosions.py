@@ -40,6 +40,7 @@ class TestProductions(unittest.TestCase):
                                   'word_the': 'the',
                                   'word_which': 'which',
                                   'word_who': 'who',
+                                  'word_batting': 'batting',
                                   'word_year': 'year',
                                   'words_single_ground': 'single ground',
                                   'words_single_innings': 'single innings',
@@ -83,6 +84,7 @@ class TestProductions(unittest.TestCase):
         matches_productions['expansions'].pop('word_this_last')
         most_x_productions['expansions'].pop('word_this_last')
         most_x_productions['expansions'].pop('word_most')
+        most_x_productions['expansions'].pop('word_wkt_order')
 
         # Unable to assert the actual list content. It permutation order changes every time. Not reproducible.
         self.assertEqual(len(matches_productions['syntax']), 11)

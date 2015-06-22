@@ -34,9 +34,12 @@ def syntax():
         %s
         %s
         %s
+        %s
+        %s
         """ % (base_syntax_most_x,
                syntax_expansions.expand_with_filters(base_syntax_most_x,
                                                      ['word_against team',
+                                                      'word_batting word_wkt_order',
                                                       'word_in word_a words_single_innings',
                                                       'word_in word_a words_single_match',
                                                       'word_in word_a words_single_series',
@@ -50,6 +53,8 @@ def syntax():
                word_config.cfg_helpers['word_captain'],
                word_config.cfg_helpers['word_in'],
                word_config.cfg_helpers['word_a'],
+               word_config.cfg_helpers['word_batting'],
+               word_config.cfg_helpers['word_wkt_order'],
                word_config.cfg_helpers['words_single_innings'],
                word_config.cfg_helpers['words_single_match'],
                word_config.cfg_helpers['words_single_series'],

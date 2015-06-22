@@ -38,6 +38,9 @@ class TestPlayerStats(SentenceParserAssert):
         self.input_last_year = 'Sachin Tendulkar stats in last year'
         self.expected_last_year = '{"player_stats": {"word_year": "year", "word_this_last": "last",  "word_in": "in", "word_stats": "stats", "player": {"player2": "tendulkar", "player1": "sachin"}}}'
 
+        self.input_batting_order = 'Gilchrist stats batting 1st as wicket keeper'
+        self.expected_batting_order = '{"player_stats": {"word_stats": "stats", "player": {"player1": "gilchrist"}, "word_batting": "batting", "word_wkt_order": "1st", "word_as": "as", "words_wicket_keeper": "wicket keeper"}}'
+
     def test_search_stats(self):
         self.assertParsedSentence(self.input_stats, self.expected_stats)
 
@@ -64,6 +67,9 @@ class TestPlayerStats(SentenceParserAssert):
 
     def test_search_as_wicketkeeper(self):
         self.assertParsedSentence(self.input_as_wicketkeeper, self.expected_as_wicketkeeper)
+
+    def test_search_batting_order(self):
+        self.assertParsedSentence(self.input_batting_order, self.expected_batting_order)
 
 if __name__ == '__main__':
     unittest.main()

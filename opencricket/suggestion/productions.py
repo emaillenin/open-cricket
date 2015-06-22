@@ -31,7 +31,7 @@ class Productions:
         result = []
         parser = SentenceParser('')
         possible_filters = word_config.expandable_filters + list(word_config.match_clauses.keys()) + \
-                           ['word_this_last', 'word_against', 'word_captain', 'words_wicket_keeper', 'single']
+                           ['word_this_last', 'word_against', 'word_captain', 'words_wicket_keeper', 'single', 'word_wkt_order']
         expansion_files = list(
             os.path.splitext(basename(f))[0] for f in glob.iglob(os.path.join(expansions_dir, '*.txt')))
         for stats_parser in parser.cfg_parsers:

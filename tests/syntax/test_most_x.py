@@ -60,6 +60,9 @@ class TestMostX(SentenceParserAssert):
         self.input_single_year = 'who has the most runs in a single year'
         self.expected_single_year = '{"most_x": {"word_the": "the", "words_single_year": "single year","word_most": "most", "word_has": "has", "word_a": "a", "metric": "runs", "who_player": {"word_who": "who"}, "word_in": "in"}}'
 
+        self.input_batting_order = 'who has the most runs batting 6th in IPL'
+        self.expected_batting_order = '{"most_x": {"series": "ipl", "word_the": "the", "word_batting": "batting", "word_wkt_order": "6th", "word_most": "most", "word_has": "has", "metric": "runs", "who_player": {"word_who": "who"}, "word_in": "in"}}'
+
     def test_search_sixes(self):
         self.assertParsedSentence(self.input_sixes, self.expected_sixes)
 
@@ -107,6 +110,9 @@ class TestMostX(SentenceParserAssert):
 
     def test_single_year(self):
         self.assertParsedSentence(self.input_single_year, self.expected_single_year)
+
+    def test_batting_order(self):
+        self.assertParsedSentence(self.input_batting_order, self.expected_batting_order)
 
 if __name__ == '__main__':
     unittest.main()
