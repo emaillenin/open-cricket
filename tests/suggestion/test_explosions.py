@@ -33,6 +33,7 @@ class TestProductions(unittest.TestCase):
         self.most_x_expansions = {'word_a': 'a',
                                   'word_against': 'against',
                                   'word_captain': 'captain',
+                                  'words_wicket_keeper': 'wicket keeper',
                                   'word_has': 'has',
                                   'word_in': 'in',
                                   'word_player': 'player',

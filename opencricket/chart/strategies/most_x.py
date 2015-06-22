@@ -18,11 +18,14 @@ def syntax():
         who_player -> word_which teamplayer word_player
         who_player -> word_which word_captain
         who_player -> word_which teamplayer word_captain
+        who_player -> word_which words_wicket_keeper
+        who_player -> word_which teamplayer words_wicket_keeper
         word_who -> 'who'
         word_which -> 'which'
         word_player -> 'player'
         word_most -> 'highest' | 'most' | 'best'
         word_the -> 'the'
+        %s
         %s
         %s
         %s
@@ -52,4 +55,5 @@ def syntax():
                word_config.cfg_helpers['words_single_series'],
                word_config.cfg_helpers['words_single_year'],
                word_config.cfg_helpers['words_single_ground'],
+               word_config.cfg_helpers['words_wicket_keeper'],
                word_config.cfg_helpers['teamplayer'])
