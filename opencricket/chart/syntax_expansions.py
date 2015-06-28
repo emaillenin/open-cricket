@@ -72,8 +72,9 @@ def replace_nlp_placeholders(syntax):
 
 def permutate_filters(filters):
     permutated_filters = []
-    # It's okay to expand only upto 4 filter clauses. no question will have more than that
-    for i in range(1, min(len(filters) + 1, 5)):
+    # It's okay to expand only upto 3 filter clauses. no question will have more than that
+    # Do not change the limit. It will be 10x slower if limit is increased by just 1
+    for i in range(1, min(len(filters) + 1, 4)):
         for f in itertools.permutations(filters, i):
             permutated_filters += [list(f)]
             if 'word_in year' in f:

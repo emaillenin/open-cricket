@@ -32,8 +32,8 @@ class TestMatchesAndClauses(SentenceParserAssert):
         self.input_matches_lost_by_a_team_while_chasing = 'matches lost by india chasing 100'
         self.expected_matches_lost_by_a_team_while_chasing = '{"matches": {"word_matches": "matches", "clause_result_by_team": {"word_won_lost": "lost", "word_by": "by", "team": "india"}, "clause_chasing_score": {"word_chasing": "chasing", "target": "100"}}}'
 
-        self.input_matches_won_by_a_team_with_wickets_left = 'matches won by india chasing 300 with 5 wickets left in odi'
-        self.expected_matches_won_by_a_team_with_wickets_left = '{"matches": {"match_type": "odi", "word_in": "in", "clause_wickets_left": {"wickets": "5", "word_wickets": "wickets", "word_with": "with", "word_left": "left"}, "clause_chasing_score": {"target": "300", "word_chasing": "chasing"}, "word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "team": "india", "word_by": "by"}}}'
+        self.input_matches_won_by_a_team_with_wickets_left = 'matches won by india chasing 300 with 5 wickets left'
+        self.expected_matches_won_by_a_team_with_wickets_left = '{"matches": {"clause_wickets_left": {"wickets": "5", "word_wickets": "wickets", "word_with": "with", "word_left": "left"}, "clause_chasing_score": {"target": "300", "word_chasing": "chasing"}, "word_matches": "matches", "clause_result_by_team": {"word_won_lost": "won", "team": "india", "word_by": "by"}}}'
 
     def test_matches_won_by_a_team(self):
         self.assertParsedSentence(self.input_matches_won_by_a_team, self.expected_matches_won_by_a_team)
