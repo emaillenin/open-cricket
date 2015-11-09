@@ -6,7 +6,7 @@ class Development(Environment):
     ELASTICSEARCH_PORT = 9200
 
 class Test(Environment):
-    ELASTICSEARCH_PORT = 9300
+    ELASTICSEARCH_PORT = 9200
 
 class Production(Environment):
     ELASTICSEARCH_PORT = 9200

@@ -1,9 +1,10 @@
 import unittest
 import json
+
 import elasticsearch
 from elasticsearch import helpers
-from environment import Test
 
+from environment import Test
 import flaskr
 from opencricket.config import es_config
 from opencricket.suggestion.productions import Productions, OPEN_CRICKET_INDEX
