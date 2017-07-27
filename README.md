@@ -9,7 +9,7 @@ by [DuggOut.com](http://duggout.com)
 Live Demo
 =========
 
-An implementation of Open Cricket is available at [http://stats.duggout.com/open-cricket](http://stats.duggout.com/open-cricket)
+An implementation of Open Cricket is available at [https://stats.duggout.com](https://stats.duggout.com)
 
 About
 =====
